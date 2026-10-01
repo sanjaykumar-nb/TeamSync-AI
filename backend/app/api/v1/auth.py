@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from app.core.rate_limit import limit
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.api.deps import get_db, get_current_user, get_current_user_id
@@ -35,7 +36,7 @@ from app.schemas.auth import (
 router = APIRouter()
 
 
-@router.post("/register", response_model=Token)
+@router.post("/register", response_model=Token, dependencies=[Depends(limit("register"))])
 async def register(
     user_data: UserCreate,
     db: AsyncSession = Depends(get_db),
@@ -95,7 +96,7 @@ async def register(
     return Token(access_token=access_token, refresh_token=refresh_token)
 
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=Token, dependencies=[Depends(limit("login"))])
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db),

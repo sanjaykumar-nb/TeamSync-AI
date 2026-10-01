@@ -1,0 +1,99 @@
+# Production overlay. Use it together with the base file:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# What it changes, against a base file written for local work:
+#   * the frontend is built, not a dev server, with its public URLs compiled in
+#   * no source is mounted and nothing reloads — the images are what runs
+#   * PostgreSQL and the AI service are reachable only inside the compose network
+#   * DEBUG stays off, so /docs is closed, and the app trusts the proxy's headers
+#   * Caddy terminates TLS for DOMAIN and API_DOMAIN, getting certificates itself
+#   * everything restarts unless you stopped it
+#
+# Set these in .env beside this file: DOMAIN, API_DOMAIN, JWT_SECRET, DB_PASSWORD,
+# and optionally GROQ_API_KEY and GITHUB_TOKEN. See docs/DEPLOY.md.
+
+services:
+  postgres:
+    ports: []          # the database answers only inside this network
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    ports: []
+    restart: unless-stopped
+
+  backend:
+    restart: unless-stopped
+    volumes: []        # the image is what runs; no source from the host
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2 --proxy-headers
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://teamsync:${DB_PASSWORD:?set DB_PASSWORD}@postgres:5432/teamsync
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET=${JWT_SECRET:?set JWT_SECRET to 32+ random characters}
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - REFRESH_TOKEN_EXPIRE_DAYS=7
+      - AI_SERVICE_URL=http://ai-service:8001
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - CORS_ORIGINS=https://${DOMAIN:?set DOMAIN}
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - SQL_ECHO=false
+      - TRUST_PROXY_HEADERS=true
+    expose: ["8000"]
+    ports: []          # Caddy is the only way in
+
+  ai-service:
+    restart: unless-stopped
+    volumes: []
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8001
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - AI_MODEL=${AI_MODEL:-llama-3.3-70b-versatile}
+      - AI_TEMPERATURE=0.1
+      - AI_MAX_TOKENS=4096
+      - AI_TIMEOUT_SECONDS=60
+      - CORS_ORIGINS=https://${DOMAIN:?set DOMAIN}
+      - ENVIRONMENT=production
+    expose: ["8001"]
+    ports: []          # it has no accounts of its own: never expose it
+
+  frontend:
+    restart: unless-stopped
+    volumes: []
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: runner
+      args:
+        # Compiled into the browser bundle at build time.
+        NEXT_PUBLIC_API_URL: https://${API_DOMAIN:?set API_DOMAIN}
+        NEXT_PUBLIC_WS_URL: wss://${API_DOMAIN}
+        NEXT_PUBLIC_AI_URL: https://${API_DOMAIN}
+    command: npm start
+    environment:
+      - NODE_ENV=production
+    expose: ["3000"]
+    ports: []
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on: [backend, frontend]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN=${DOMAIN:?set DOMAIN}
+      - API_DOMAIN=${API_DOMAIN:?set API_DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

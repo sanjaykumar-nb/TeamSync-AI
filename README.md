@@ -236,6 +236,15 @@ npm run dev
 Then visit http://localhost:3000 and log in with `pm@demo.com` / `password123` (or register a
 new account). Open a project → **AI Insights** tab → **Run Analysis**.
 
+### Deploying it
+
+For a real deployment — built frontend, TLS, closed database, no reload — use the production
+overlay and [docs/DEPLOY.md](docs/DEPLOY.md):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
 ### Tracking work from GitHub
 
 Set a repository in **Project settings → GitHub repository** (`owner/name`), then press
@@ -281,7 +290,7 @@ full walkthrough, including what is real and what the replay derives, is in [DEM
 
 ```bash
 make test               # everything
-make test-backend       # backend: 102 tests
+make test-backend       # backend: 108 tests
 make test-ai            # AI service: 85 tests
 make test-frontend      # frontend: 63 tests (vitest)
 ```
@@ -342,6 +351,7 @@ python -m eval.make_figures                  # regenerate every figure in docs/i
 | [docs/TEAMSYNC_FLOWS.pdf](docs/TEAMSYNC_FLOWS.pdf) | Three diagrams: the loop a manager runs, one analysis hop by hop across both services, and how GitHub work reaches the board (source page: `docs/flows.html`) |
 | [VALIDATION_REPORT.md](VALIDATION_REPORT.md) | Phase 1 validation — every agent on all 987 real sprints, role matrix, response times, defects found and fixed |
 | [RELEASE_NOTES.md](RELEASE_NOTES.md) | v1.0-mvp — what the bundle contains, how to run it, how it was verified |
+| [docs/DEPLOY.md](docs/DEPLOY.md) | Deploying it: settings, the production overlay, TLS, free hosting, backups, and what is hardened |
 | [docs/API.md](docs/API.md) | Every endpoint of both services, marked by whether the app uses it and a test covers it; OpenAPI specs in `docs/api/` |
 | `ai-service/eval/figures/README.md` | Figure sourcing, palette/accessibility rationale, LaTeX captions |
 

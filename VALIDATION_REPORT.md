@@ -15,7 +15,7 @@ not re-measured, it says so.
 | **Recommendation agent** | Every suggested reassignment applied and the risk recomputed | Predicted effect held in **1,524 / 1,524** cases; severity improved in **62%** |
 | **Published evaluations** | Every one re-run from scratch | All reproduce — after fixing an evaluation clock that had silently broken one of them |
 | **Roles** | Every protected endpoint × every role, read off the code | **37 × 5 = 185** checks pass — after fixing **five security defects** this validation found |
-| **Features** | Test suites, the demo replay, response times | 102 + 85 + 63 tests pass; 14 / 14 demo claims; every feature responds in under a second |
+| **Features** | Test suites, the demo replay, response times | 108 + 85 + 63 tests pass; 14 / 14 demo claims; every feature responds in under a second |
 | **Load** | Up to 50 people at once, 5 analyses at once, 25 simultaneous sign-ins | **0 failed requests** — after fixing **three defects** the load test found (7 failures before) |
 
 ---
@@ -168,7 +168,7 @@ gained two fields since; the graph prompt is unchanged. The published 487× is t
 
 ## 3. Product features
 
-**Tests.** Backend **102** (SQLite locally; SQLite and PostgreSQL 16 in CI), AI service **85**, frontend
+**Tests.** Backend **108** (SQLite locally; SQLite and PostgreSQL 16 in CI), AI service **85**, frontend
 **63** plus a clean type check. The demo replay (`check_demo`) holds **14 / 14** claims.
 
 **Roles** ([`test_permission_matrix.py`](backend/app/tests/test_permission_matrix.py)). The permission
@@ -274,6 +274,10 @@ The load test found three more, all fixed:
 - **The language-model layer's current behaviour** — its three results above are from the published
   runs; re-measuring needs a paid key.
 - **Whether real teams would follow the suggested moves** — only that the moves do what they predict.
+- **Anything about a deployed instance.** Everything here was measured locally and in CI. The
+  production overlay (`docker-compose.prod.yml`) and its hardening — built frontend, closed
+  database and AI service, TLS, sign-in rate limit — are covered by their own tests and by the
+  Docker job in CI, but no public instance has been run or attacked.
 - **Whether GitHub sync helps a real team.** It landed after this validation: it is covered by
   its own 20 tests, but no real repository's history has been replayed through it, and none of the
   TAWOS results above involve it.

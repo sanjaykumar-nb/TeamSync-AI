@@ -18,7 +18,19 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://teamsync:teamsync_dev_password@localhost:5432/teamsync"
     REDIS_URL: str = "redis://localhost:6379/0"
     
-    CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:8000", "http://localhost:8001"]
+    # A plain list ("http://a,http://b") or JSON; read through cors_origins.
+    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:8000,http://localhost:8001"
+
+    @property
+    def cors_origins(self) -> list[str]:
+        raw = (self.CORS_ORIGINS or "").strip()
+        if not raw:
+            return []
+        if raw.startswith("["):
+            import json
+
+            return [str(origin).rstrip("/") for origin in json.loads(raw)]
+        return [origin.strip().rstrip("/") for origin in raw.split(",") if origin.strip()]
 
     class Config:
         env_file = ".env"

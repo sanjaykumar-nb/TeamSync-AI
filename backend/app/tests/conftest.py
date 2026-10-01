@@ -1,6 +1,10 @@
 import asyncio
 import os
 
+# The suite signs in far more often than a person would; the limit is exercised by
+# its own test (test_hardening.py), which turns it back on.
+os.environ.setdefault("AUTH_RATE_LIMIT_ATTEMPTS", "0")
+
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport

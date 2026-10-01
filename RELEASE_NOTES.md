@@ -98,6 +98,14 @@ Every push runs, on GitHub Actions:
 
 ## Since v1.0.1-mvp — closing the validation gaps
 
+- **Ready to deploy.** A production overlay (`docker-compose.prod.yml`) with a built frontend,
+  Caddy for TLS, the database and AI service closed to the internet, no reload and no mounted
+  source; `docs/DEPLOY.md` has the steps. Four things that would have bitten a public instance
+  are fixed: the frontend image served the development server, `DEBUG` (and so `/docs`) defaulted
+  on, `CORS_ORIGINS` stopped the app at startup unless it was JSON, and nothing limited sign-in
+  attempts — now 10 a minute per caller, with the correct password refused too once the limit is
+  reached, so guessing cannot slip through.
+
 - **GitHub sync (new).** A project can name a repository; commits and pull requests that name a
   task — by the eight-character reference on its GitHub tab, or by a key like `MESOS-8383` in its
   title — move it along: a commit starts it, an open pull request sends it to review, a merged one
@@ -126,7 +134,7 @@ Every push runs, on GitHub Actions:
   accounts, an answer key read from the board, and the analysis script: `docs/user-study/`.
 - The importer also reads blocking links named "Blocks" (LSST's Jira), not only "Blocker".
 
-Tests: backend 102, AI service 85, frontend 63.
+Tests: backend 108, AI service 85, frontend 63.
 
 ## Since v1.0-mvp — found by the Phase 1 validation
 
