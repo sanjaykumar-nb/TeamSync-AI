@@ -15,7 +15,7 @@ not re-measured, it says so.
 | **Recommendation agent** | Every suggested reassignment applied and the risk recomputed | Predicted effect held in **1,524 / 1,524** cases; severity improved in **62%** |
 | **Published evaluations** | Every one re-run from scratch | All reproduce — after fixing an evaluation clock that had silently broken one of them |
 | **Roles** | Every protected endpoint × every role, read off the code | **37 × 5 = 185** checks pass — after fixing **five security defects** this validation found |
-| **Features** | Test suites, the demo replay, response times | 108 + 85 + 63 tests pass; 14 / 14 demo claims; every feature responds in under a second |
+| **Features** | Test suites, the demo replay, response times | 109 + 85 + 63 tests pass; 14 / 14 demo claims; every feature responds in under a second |
 | **Load** | Up to 50 people at once, 5 analyses at once, 25 simultaneous sign-ins | **0 failed requests** — after fixing **three defects** the load test found (7 failures before) |
 
 ---
@@ -168,7 +168,7 @@ gained two fields since; the graph prompt is unchanged. The published 487× is t
 
 ## 3. Product features
 
-**Tests.** Backend **108** (SQLite locally; SQLite and PostgreSQL 16 in CI), AI service **85**, frontend
+**Tests.** Backend **109** (SQLite locally; SQLite and PostgreSQL 16 in CI), AI service **85**, frontend
 **63** plus a clean type check. The demo replay (`check_demo`) holds **14 / 14** claims.
 
 **Roles** ([`test_permission_matrix.py`](backend/app/tests/test_permission_matrix.py)). The permission

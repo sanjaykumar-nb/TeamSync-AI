@@ -67,6 +67,16 @@ class TestSignInLimit:
                                  json={"email": "late@example.com", "password": "password123", "full_name": "Late"})
         assert last.status_code == 429
 
+    async def test_a_team_signing_in_one_after_another_is_not_an_attack(
+        self, client: AsyncClient, user_with_role, test_user
+    ):
+        # The demo importer signs in as every person in the sprint, in a row. Only
+        # failures count, so a run of correct sign-ins never trips the limit.
+        for _ in range(6):
+            response = await client.post("/api/v1/auth/login",
+                                         data={"username": test_user.email, "password": "password123"})
+            assert response.status_code == 200
+
     async def test_turning_it_off_lets_everything_through(self, client: AsyncClient, monkeypatch, test_user):
         monkeypatch.setattr(rate_limit.settings, "AUTH_RATE_LIMIT_ATTEMPTS", 0)
         rate_limit.forget_everything()

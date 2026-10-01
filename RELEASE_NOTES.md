@@ -103,8 +103,10 @@ Every push runs, on GitHub Actions:
   source; `docs/DEPLOY.md` has the steps. Four things that would have bitten a public instance
   are fixed: the frontend image served the development server, `DEBUG` (and so `/docs`) defaulted
   on, `CORS_ORIGINS` stopped the app at startup unless it was JSON, and nothing limited sign-in
-  attempts — now 10 a minute per caller, with the correct password refused too once the limit is
-  reached, so guessing cannot slip through.
+  attempts — now ten failed ones a minute per caller, after which even the correct password is
+  refused for the rest of the minute, so guessing cannot simply continue until it works. Only
+  failures count, so a team signing in one after another (the demo importer does exactly that)
+  is never mistaken for an attack.
 
 - **GitHub sync (new).** A project can name a repository; commits and pull requests that name a
   task — by the eight-character reference on its GitHub tab, or by a key like `MESOS-8383` in its
@@ -134,7 +136,7 @@ Every push runs, on GitHub Actions:
   accounts, an answer key read from the board, and the analysis script: `docs/user-study/`.
 - The importer also reads blocking links named "Blocks" (LSST's Jira), not only "Blocker".
 
-Tests: backend 108, AI service 85, frontend 63.
+Tests: backend 109, AI service 85, frontend 63.
 
 ## Since v1.0-mvp — found by the Phase 1 validation
 

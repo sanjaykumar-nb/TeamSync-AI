@@ -136,8 +136,11 @@ with that secret are refused before the body is read.
 Done:
 
 - Passwords hashed with bcrypt, on a worker thread so a sign-in cannot stall the server.
-- Sign-in and sign-up limited to 10 attempts a minute per caller (`AUTH_RATE_LIMIT_ATTEMPTS`).
-  It counts in memory per worker, so with `--workers 2` the real limit is twice that; an exact
+- **Ten failed sign-ins a minute per caller** (`AUTH_RATE_LIMIT_ATTEMPTS`), after which every
+  attempt from that caller is refused for the rest of the minute — the correct password included,
+  or guessing would just continue until it worked. Only failures count, so a team signing in one
+  after another is never mistaken for an attack. Creating accounts is limited by every attempt.
+  The tally is in memory per worker, so with `--workers 2` the real limit is twice that; an exact
   shared limit would need Redis.
 - Every state-changing endpoint carries a role check — 185 of them are verified by a test — with
   one deliberate exception, the GitHub webhook, which is verified by signature instead.

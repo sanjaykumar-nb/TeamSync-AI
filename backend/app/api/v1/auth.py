@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from uuid import UUID, uuid4
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
-from app.core.rate_limit import limit
+from app.core.rate_limit import limit, record_failure
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.api.deps import get_db, get_current_user, get_current_user_id
@@ -36,7 +36,7 @@ from app.schemas.auth import (
 router = APIRouter()
 
 
-@router.post("/register", response_model=Token, dependencies=[Depends(limit("register"))])
+@router.post("/register", response_model=Token, dependencies=[Depends(limit("register", count_every_attempt=True))])
 async def register(
     user_data: UserCreate,
     db: AsyncSession = Depends(get_db),
@@ -98,6 +98,7 @@ async def register(
 
 @router.post("/login", response_model=Token, dependencies=[Depends(limit("login"))])
 async def login(
+    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db),
 ):
@@ -109,6 +110,7 @@ async def login(
     user = result.scalar_one_or_none()
 
     if not user or not await verify_password_async(password, user.password_hash):
+        record_failure(request, "login")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",

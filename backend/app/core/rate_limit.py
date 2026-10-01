@@ -34,11 +34,14 @@ def caller(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
-def limit(name: str) -> Callable:
+def limit(name: str, count_every_attempt: bool = False) -> Callable:
     """A dependency allowing AUTH_RATE_LIMIT_ATTEMPTS per window, per caller.
 
-    `name` keeps one endpoint's attempts from counting against another's.
-    Setting the attempts to 0 turns the limit off (the test suite does).
+    By default only failures count, recorded by the endpoint through `record_failure`:
+    a team signing in one after another is normal, a run of wrong passwords is not.
+    `count_every_attempt` counts them all, which suits creating accounts, where the
+    successes are the thing to limit. `name` keeps one endpoint's tally separate from
+    another's, and setting the attempts to 0 turns the limit off (the test suite does).
     """
 
     async def check(request: Request) -> None:
@@ -58,9 +61,18 @@ def limit(name: str) -> Callable:
                 detail=f"Too many attempts. Try again in {wait} seconds.",
                 headers={"Retry-After": str(wait)},
             )
-        recent.append(now)
+        if count_every_attempt:
+            recent.append(now)
 
     return check
+
+
+def record_failure(request: Request, name: str) -> None:
+    """One more failed attempt from this caller. Once they reach the limit, every
+    attempt is refused for the rest of the window — including the right password,
+    or guessing would simply continue until it worked."""
+    if settings.AUTH_RATE_LIMIT_ATTEMPTS > 0:
+        _attempts[(name, caller(request))].append(monotonic())
 
 
 def forget_everything() -> None:

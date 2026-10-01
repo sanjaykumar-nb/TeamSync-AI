@@ -290,7 +290,7 @@ full walkthrough, including what is real and what the replay derives, is in [DEM
 
 ```bash
 make test               # everything
-make test-backend       # backend: 108 tests
+make test-backend       # backend: 109 tests
 make test-ai            # AI service: 85 tests
 make test-frontend      # frontend: 63 tests (vitest)
 ```
