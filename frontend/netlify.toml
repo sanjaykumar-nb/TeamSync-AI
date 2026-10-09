@@ -1,0 +1,18 @@
+# Netlify builds the frontend from this directory.
+#
+# NEXT_PUBLIC_* values are compiled into the browser bundle, so the API address has to
+# be set for the build, not at run time. Either set it in Netlify's UI (Site settings →
+# Environment variables) or pass it on the command line:
+#
+#   NEXT_PUBLIC_API_URL=https://teamsync-backend.onrender.com netlify deploy --build --prod
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Netlify's Next.js runtime handles routing, server components and image optimisation.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

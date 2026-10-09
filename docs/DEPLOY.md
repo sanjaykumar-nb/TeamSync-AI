@@ -106,6 +106,10 @@ service on the VM. With a managed database, set `DATABASE_URL` yourself and reme
 it must start `postgresql+asyncpg://`, and `?sslmode=require` has to become `?ssl=true`, which
 is what asyncpg understands.
 
+**With no credit card at all**, [`deploy/free-tier.md`](../deploy/free-tier.md) walks through Neon,
+Render and Netlify step by step; [`render.yaml`](../render.yaml) creates both Python services from
+one click, and [`frontend/netlify.toml`](../frontend/netlify.toml) builds the frontend.
+
 **Platforms instead of a server** (Render, Railway, Fly): deploy `backend/` and `ai-service/`
 as two services from their Dockerfiles, and override the start command so they listen on the
 platform's port: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`. Keep the AI service's URL

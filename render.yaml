@@ -1,0 +1,66 @@
+# Render blueprint: the two Python services, on the free tier, no card needed.
+#
+# In Render: New → Blueprint → pick this repository. It reads this file and creates
+# both services. You are asked for DATABASE_URL (from Neon — see deploy/free-tier.md).
+#
+# The database is deliberately not here: Render's own free PostgreSQL expires 30 days
+# after it is created, which would quietly kill a demo mid-semester. Neon's free plan
+# does not expire.
+#
+# Free services sleep after 15 minutes without traffic and take about a minute to wake.
+
+services:
+  - type: web
+    name: teamsync-ai-service
+    runtime: docker
+    plan: free
+    region: singapore          # nearest to India; oregon and frankfurt also work
+    rootDir: ai-service
+    dockerfilePath: ./Dockerfile
+    # The image listens on 8001; Render tells the service which port to use instead.
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      # No key: the agents use their deterministic path, which is how every
+      # published result was measured. Add one here to turn on narration.
+      - key: GROQ_API_KEY
+        value: ""
+      - key: CORS_ORIGINS
+        value: ""
+
+  - type: web
+    name: teamsync-backend
+    runtime: docker
+    plan: free
+    region: singapore
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      # Paste Neon's connection string, with two edits described in deploy/free-tier.md.
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true     # Render makes one and keeps it
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: SQL_ECHO
+        value: "false"
+      - key: TRUST_PROXY_HEADERS
+        value: "true"           # Render terminates TLS in front of the service
+      - key: GROQ_API_KEY
+        value: ""
+      - key: GITHUB_TOKEN
+        value: ""
+      # Both filled in once the other URLs exist (see the guide).
+      - key: AI_SERVICE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false

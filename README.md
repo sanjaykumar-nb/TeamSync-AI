@@ -352,6 +352,7 @@ python -m eval.make_figures                  # regenerate every figure in docs/i
 | [VALIDATION_REPORT.md](VALIDATION_REPORT.md) | Phase 1 validation — every agent on all 987 real sprints, role matrix, response times, defects found and fixed |
 | [RELEASE_NOTES.md](RELEASE_NOTES.md) | v1.0-mvp — what the bundle contains, how to run it, how it was verified |
 | [docs/DEPLOY.md](docs/DEPLOY.md) | Deploying it: settings, the production overlay, TLS, free hosting, backups, and what is hardened |
+| [deploy/free-tier.md](deploy/free-tier.md) | Putting it online with no credit card: Neon, Render and Netlify, and what the free plans cost you |
 | [docs/API.md](docs/API.md) | Every endpoint of both services, marked by whether the app uses it and a test covers it; OpenAPI specs in `docs/api/` |
 | `ai-service/eval/figures/README.md` | Figure sourcing, palette/accessibility rationale, LaTeX captions |
 
