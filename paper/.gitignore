@@ -1,0 +1,4 @@
+# preview renders, not sources
+_pages/
+figures/*.png
+*.preview.html

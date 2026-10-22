@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="516pt" height="350pt" viewBox="0 0 516 350">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#7d7d7d"/></marker><marker id="ahA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#1f4e79"/></marker></defs>
+<rect x="0.0" y="0.0" width="516.0" height="350.0" rx="0" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<rect x="22.0" y="8.0" width="366.0" height="50.0" rx="3" fill="#fcfcfc" stroke="#7d7d7d" stroke-width="0.7"/>
+<text x="11.0" y="33.0" font-family="Helvetica, Arial, sans-serif" font-size="6.6" font-weight="bold" fill="#444444" text-anchor="middle" letter-spacing="0.6" transform="rotate(-90 11.0 33.0)">PRESENTATION</text>
+<text x="383.0" y="17.5" font-family="Helvetica, Arial, sans-serif" font-size="6.0" font-weight="normal" font-style="italic" fill="#737373" text-anchor="end">Next.js 14 · React 18</text>
+<rect x="22.0" y="66.0" width="366.0" height="82.0" rx="3" fill="#fcfcfc" stroke="#7d7d7d" stroke-width="0.7"/>
+<text x="11.0" y="107.0" font-family="Helvetica, Arial, sans-serif" font-size="6.6" font-weight="bold" fill="#444444" text-anchor="middle" letter-spacing="0.6" transform="rotate(-90 11.0 107.0)">APPLICATION</text>
+<text x="383.0" y="75.5" font-family="Helvetica, Arial, sans-serif" font-size="6.0" font-weight="normal" font-style="italic" fill="#737373" text-anchor="end">FastAPI · SQLAlchemy async</text>
+<rect x="22.0" y="156.0" width="366.0" height="186.0" rx="3" fill="#fcfcfc" stroke="#7d7d7d" stroke-width="0.7"/>
+<text x="11.0" y="249.0" font-family="Helvetica, Arial, sans-serif" font-size="6.6" font-weight="bold" fill="#444444" text-anchor="middle" letter-spacing="0.6" transform="rotate(-90 11.0 249.0)">ANALYSIS</text>
+<rect x="30.0" y="20.0" width="111.3" height="28.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="85.7" y="33.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Kanban board</text>
+<text x="85.7" y="42.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">tasks · dependencies</text>
+<rect x="149.3" y="20.0" width="111.3" height="28.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="205.0" y="33.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Risk dashboard</text>
+<text x="205.0" y="42.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">findings + evidence</text>
+<rect x="268.7" y="20.0" width="111.3" height="28.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="324.3" y="33.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Project settings</text>
+<text x="324.3" y="42.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">capacity · repository</text>
+<rect x="30.0" y="78.0" width="81.5" height="27.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="70.8" y="90.5" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Authentication</text>
+<text x="70.8" y="99.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">JWT + refresh</text>
+<rect x="119.5" y="78.0" width="81.5" height="27.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="160.2" y="90.5" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Tenant guard</text>
+<text x="160.2" y="99.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">org-scoped rows</text>
+<rect x="209.0" y="78.0" width="81.5" height="27.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="249.8" y="90.5" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Work items</text>
+<text x="249.8" y="99.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">CRUD · board</text>
+<rect x="298.5" y="78.0" width="81.5" height="27.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="339.2" y="90.5" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Repository sync</text>
+<text x="339.2" y="99.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">commits · PRs</text>
+<rect x="30.0" y="112.0" width="171.0" height="28.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="115.5" y="125.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Analysis orchestrator</text>
+<text x="115.5" y="134.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">assembles the project snapshot</text>
+<rect x="209.0" y="112.0" width="171.0" height="28.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="294.5" y="125.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Evidence recorder</text>
+<text x="294.5" y="134.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">persists findings, scores, witness</text>
+<rect x="30.0" y="176.0" width="312.0" height="60.0" rx="3" fill="#e9edf3" stroke="#1b1b1b" stroke-width="1.0"/>
+<text x="36.0" y="187.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="bold" font-style="normal" fill="#1f4e79" text-anchor="start">DETERMINISTIC CORE — no model call, no randomness</text>
+<rect x="40.0" y="194.0" width="90.7" height="32.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="85.3" y="209.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Graph compiler</text>
+<text x="85.3" y="218.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">typed nodes, 9 edge kinds</text>
+<rect x="140.7" y="194.0" width="90.7" height="32.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="186.0" y="209.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Risk metric bank</text>
+<text x="186.0" y="218.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">six graph algorithms</text>
+<rect x="241.3" y="194.0" width="90.7" height="32.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="286.7" y="209.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Witness selector</text>
+<text x="286.7" y="218.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">1 hop · ≤8/seed · ≤60</text>
+<rect x="30.0" y="268.0" width="312.0" height="56.0" rx="3" fill="#f7f1e8" stroke="#1b1b1b" stroke-width="1.0"/>
+<text x="36.0" y="279.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="bold" font-style="normal" fill="#8a5a12" text-anchor="start">NARRATION LAYER — bounded prompt, checked afterwards</text>
+<rect x="40.0" y="285.0" width="90.7" height="31.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="85.3" y="299.5" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Prompt assembler</text>
+<text x="85.3" y="308.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">columnar serialisation</text>
+<rect x="140.7" y="285.0" width="90.7" height="31.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="186.0" y="299.5" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Model adapter</text>
+<text x="186.0" y="308.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">LLM, or rule fallback</text>
+<rect x="241.3" y="285.0" width="90.7" height="31.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="286.7" y="299.5" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Grounding verifier</text>
+<text x="286.7" y="308.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">drops unresolvable ids</text>
+<path d="M 130.7 210.0 L 140.7 210.0" fill="none" stroke="#7d7d7d" stroke-width="0.9" marker-end="url(#ah)"/>
+<path d="M 231.3 210.0 L 241.3 210.0" fill="none" stroke="#7d7d7d" stroke-width="0.9" marker-end="url(#ah)"/>
+<path d="M 130.7 300.5 L 140.7 300.5" fill="none" stroke="#7d7d7d" stroke-width="0.9" marker-end="url(#ah)"/>
+<path d="M 231.3 300.5 L 241.3 300.5" fill="none" stroke="#7d7d7d" stroke-width="0.9" marker-end="url(#ah)"/>
+<rect x="404.0" y="72.0" width="108.0" height="76.0" rx="3" fill="#fcfcfc" stroke="#7d7d7d" stroke-width="0.7"/>
+<text x="459.0" y="81.0" font-family="Helvetica, Arial, sans-serif" font-size="6.0" font-weight="bold" font-style="normal" fill="#737373" text-anchor="middle">STORES</text>
+<rect x="408.0" y="86.0" width="102.0" height="26.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="459.0" y="98.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">PostgreSQL 16</text>
+<text x="459.0" y="107.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">system of record</text>
+<rect x="408.0" y="116.0" width="102.0" height="26.0" rx="2.0" fill="#ffffff" stroke="#1b1b1b" stroke-width="0.9"/>
+<text x="459.0" y="128.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Redis + Celery</text>
+<text x="459.0" y="137.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">cache · scheduled runs</text>
+<rect x="404.0" y="196.0" width="108.0" height="82.0" rx="3" fill="#fcfcfc" stroke="#7d7d7d" stroke-width="0.7"/>
+<text x="459.0" y="205.0" font-family="Helvetica, Arial, sans-serif" font-size="6.0" font-weight="bold" font-style="normal" fill="#737373" text-anchor="middle">EXTERNAL</text>
+<rect x="408.0" y="210.0" width="102.0" height="26.0" rx="2.0" fill="#f5f5f5" stroke="#6f6f6f" stroke-width="0.9" stroke-dasharray="3 2"/>
+<text x="459.0" y="222.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">Git host</text>
+<text x="459.0" y="231.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">webhooks · REST</text>
+<rect x="408.0" y="242.0" width="102.0" height="26.0" rx="2.0" fill="#f5f5f5" stroke="#6f6f6f" stroke-width="0.9" stroke-dasharray="3 2"/>
+<text x="459.0" y="254.0" font-family="Helvetica, Arial, sans-serif" font-size="7.3" font-weight="bold" font-style="normal" fill="#1b1b1b" text-anchor="middle">LLM provider</text>
+<text x="459.0" y="263.0" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="normal" fill="#4f4f4f" text-anchor="middle">optional — absent ⇒ fallback</text>
+<path d="M 85.7 48.0 L 85.7 78.0" fill="none" stroke="#7d7d7d" stroke-width="0.9" marker-end="url(#ah)"/>
+<rect x="88.2" y="58.2" width="57.1" height="8.6" rx="1" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="89.7" y="64.0" font-family="Helvetica, Arial, sans-serif" font-size="6.2" font-weight="normal" font-style="italic" fill="#3d3d3d" text-anchor="start">HTTPS · bearer token</text>
+<path d="M 316.3 78.0 L 316.3 48.0" fill="none" stroke="#7d7d7d" stroke-width="0.9" marker-end="url(#ah)"/>
+<rect x="267.7" y="58.2" width="46.1" height="8.6" rx="1" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="312.3" y="64.0" font-family="Helvetica, Arial, sans-serif" font-size="6.2" font-weight="normal" font-style="italic" fill="#3d3d3d" text-anchor="end">board + findings</text>
+<path d="M 115.5 140.0 L 115.5 176.0" fill="none" stroke="#7d7d7d" stroke-width="0.9" marker-end="url(#ah)"/>
+<rect x="118.0" y="144.2" width="89.8" height="8.6" rx="1" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="119.5" y="150.0" font-family="Helvetica, Arial, sans-serif" font-size="6.2" font-weight="normal" font-style="italic" fill="#3d3d3d" text-anchor="start">project snapshot (internal REST)</text>
+<path d="M 342.0 300.5 L 352.0 300.5 L 352.0 140.0" fill="none" stroke="#7d7d7d" stroke-width="0.9" marker-end="url(#ah)"/>
+<rect x="303.4" y="142.2" width="46.1" height="8.6" rx="1" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="348.0" y="148.0" font-family="Helvetica, Arial, sans-serif" font-size="6.2" font-weight="normal" font-style="italic" fill="#3d3d3d" text-anchor="end">verified finding</text>
+<rect x="319.7" y="149.7" width="29.8" height="8.6" rx="1" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="348.0" y="155.5" font-family="Helvetica, Arial, sans-serif" font-size="6.2" font-weight="normal" font-style="italic" fill="#3d3d3d" text-anchor="end">+ evidence</text>
+<path d="M 342.0 210.0 L 372.0 210.0 L 372.0 140.0" fill="none" stroke="#7d7d7d" stroke-width="0.9" stroke-dasharray="4 2.5" marker-end="url(#ah)"/>
+<rect x="375.5" y="142.2" width="35.2" height="8.6" rx="1" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="377.0" y="148.0" font-family="Helvetica, Arial, sans-serif" font-size="6.2" font-weight="normal" font-style="italic" fill="#3d3d3d" text-anchor="start">risk scores,</text>
+<rect x="375.5" y="149.7" width="54.3" height="8.6" rx="1" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="377.0" y="155.5" font-family="Helvetica, Arial, sans-serif" font-size="6.2" font-weight="normal" font-style="italic" fill="#3d3d3d" text-anchor="start">never via the model</text>
+<path d="M 286.7 236.0 L 286.7 268.0" fill="none" stroke="#1f4e79" stroke-width="1.6" marker-end="url(#ahA)"/>
+<rect x="150.2" y="248.6" width="130.0" height="8.7" rx="1" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="278.7" y="254.5" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" font-style="italic" fill="#1f4e79" text-anchor="end">witness subgraph — the only thing that crosses</text>
+<path d="M 388.0 99.0 L 404.0 99.0" fill="none" stroke="#7d7d7d" stroke-width="0.9"/>
+<path d="M 388.0 129.0 L 404.0 129.0" fill="none" stroke="#7d7d7d" stroke-width="0.9"/>
+<path d="M 404.0 223.0 L 398.0 223.0 L 398.0 92.0 L 388.0 92.0" fill="none" stroke="#7d7d7d" stroke-width="0.9" stroke-dasharray="3 2" marker-end="url(#ah)"/>
+<path d="M 186.0 324.0 L 186.0 332.0 L 394.0 332.0 L 394.0 255.0 L 404.0 255.0" fill="none" stroke="#7d7d7d" stroke-width="0.9" stroke-dasharray="3 2" marker-end="url(#ah)"/>
+<rect x="22.0" y="8.0" width="366.0" height="50.0" rx="3" fill="none" stroke="#7d7d7d" stroke-width="0.7"/>
+<rect x="22.0" y="66.0" width="366.0" height="82.0" rx="3" fill="none" stroke="#7d7d7d" stroke-width="0.7"/>
+<rect x="22.0" y="156.0" width="366.0" height="186.0" rx="3" fill="none" stroke="#7d7d7d" stroke-width="0.7"/>
+<rect x="404.0" y="72.0" width="108.0" height="76.0" rx="3" fill="none" stroke="#7d7d7d" stroke-width="0.7"/>
+<rect x="404.0" y="196.0" width="108.0" height="82.0" rx="3" fill="none" stroke="#7d7d7d" stroke-width="0.7"/>
+<text x="32.0" y="335.0" font-family="Helvetica, Arial, sans-serif" font-size="6.0" font-weight="normal" font-style="italic" fill="#737373" text-anchor="start">FastAPI · NetworkX · pluggable model adapter</text>
+</svg>
