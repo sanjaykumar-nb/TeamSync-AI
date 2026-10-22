@@ -41,7 +41,7 @@ SLOTS = {
 
 
 def figure_block(s: str, marker: str) -> str:
-    m = re.search(r'<figure class="wide">\s*<img src="figures/' + marker + r'.*?</figure>\r?\n', s, re.S)
+    m = re.search(r'<figure class="wide">\s*<img src="[^"]*' + marker + r'.*?</figure>\r?\n', s, re.S)
     assert m, marker
     return m.group(0)
 

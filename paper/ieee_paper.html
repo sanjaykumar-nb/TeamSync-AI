@@ -210,7 +210,7 @@ change. Determinism is lost, because the same board can yield different verdicts
 consecutive calls, and a risk score that moves when nothing moved is not a measurement.
 Finally, and most seriously for a tool whose output is meant to change what people do, the
 justification cannot be trusted: models cite issue keys and names that look exactly like real
-ones and are not [12].</p>
+ones and are not [1].</p>
 
 <p>This paper describes a system, TeamSync AI, built on the inversion of that arrangement.
 Risk is <em>computed</em>, not inferred. Project state&mdash;people, tasks, milestones,
@@ -229,7 +229,7 @@ in the subgraph it was given, and anything that fails to resolve is deleted befo
 is shown. The model never sees the project, never computes the score, and cannot invent an
 issue key that survives to the user interface.</p>
 
-<p>Three properties follow from that confinement, and each is measured in Section VII. Prompt
+<p>Three properties follow from that confinement, and each is measured in Section VIII. Prompt
 size stops tracking project size, because the subgraph is bounded by construction.
 Hallucinated evidence becomes mechanically detectable rather than a matter of trust, because
 the set of legitimate references is finite and known. And the system degrades cleanly: every
@@ -242,7 +242,7 @@ measured.</p>
 <ul class="tight">
   <li>an architecture in which coordination risk is a deterministic graph computation and the
   language model is a bounded narrator, with one explicitly drawn interface between them
-  (Sections III&ndash;IV);</li>
+  (Sections IV&ndash;V);</li>
   <li>a witness-subgraph construction whose prompt cost is a function of the number of
   anomalies rather than of project size&mdash;measured at 1.47&times; prompt growth across a
   154&times; growth in project size, and a 487&times; reduction against full-dataset
@@ -260,24 +260,24 @@ measured.</p>
 <h3>A. Risk and effort prediction in agile projects</h3>
 
 <p class="first">Predicting whether agile work will land on time is an old problem with a
-sobering literature. Jørgensen and Shepperd&rsquo;s review of cost-estimation research [17] and
-Hall et al.&rsquo;s review of fault-prediction performance [16] both report that reported accuracy
+sobering literature. Jørgensen and Shepperd&rsquo;s review of cost-estimation research [3] and
+Hall et al.&rsquo;s review of fault-prediction performance [4] both report that reported accuracy
 depends heavily on evaluation design, and that results rarely transfer between contexts.
-Deep learning has been applied directly to story-point estimation, most prominently by
-Choetkiertikul et al. [18], whose Deep-SE model learns effort from issue text. A subsequent
-replication by Tawosi et al. [19] found that Deep-SE beat a median baseline with statistical
+Deep learning has been applied directly to story-point estimation, most
+prominently by Choetkiertikul et al. [5], whose Deep-SE model learns effort from issue text. A subsequent
+replication by Tawosi et al. [6] found that Deep-SE beat a median baseline with statistical
 significance in only a small minority of cases. We read that pair of papers as a caution
-rather than a discouragement, and it is one reason the present work reports a learned model
-that lost on held-out data instead of quietly dropping it.</p>
+rather than a discouragement, and it is one reason the present work reports a learned model that lost on held-out data instead of quietly
+dropping it. The question has not gone quiet: a 2026 evaluation across sixteen projects reports that language models given no training examples at all estimate story points better than supervised models fitted to 80% of the data [7], which is a further reason to be careful about what a tuned number on one project set is worth on another.</p>
 
 <h3>B. Multi-agent systems built on language models</h3>
 
 <p class="first">A fast-moving body of work composes language models into cooperating agents.
-MetaGPT [4] assigns standard-operating-procedure roles to agents producing software
-artefacts; ChatDev [5] runs a simulated software company through conversational
-turn-taking; AutoGen [20] generalises the pattern into a conversation framework; ReAct [7]
-interleaves reasoning traces with tool actions; and AgentBench [6] and the survey of Wang et
-al. [21] map the resulting design space. These systems share an assumption worth naming:
+MetaGPT [8] assigns standard-operating-procedure roles to agents producing software
+artefacts; ChatDev [9] runs a simulated software company through conversational
+turn-taking; AutoGen [10] generalises the pattern into a conversation framework; ReAct [11]
+interleaves reasoning traces with tool actions; and AgentBench [12] and the surveys of Wang et
+al. [13] and He et al. [14] map the resulting design space, the latter specifically for software engineering. A 2026 experience report building such systems with current frameworks finds the basic components well covered and the operational ones&mdash;agent telemetry above all&mdash;still missing [15], which matches our own experience: the hardest part was not making agents talk but being able to tell, afterwards, which path produced a given output. These systems share an assumption worth naming:
 that the model is the component that <em>decides</em>, and that the engineering problem is
 arranging its decisions well. The present work takes the opposite position for the specific
 task of risk detection&mdash;the decision is a graph computation, and the model is kept out
@@ -285,22 +285,21 @@ of it&mdash;so the comparison is architectural rather than a matter of better pr
 
 <h3>C. Explainability</h3>
 
-<p class="first">Post-hoc explanation methods such as LIME [9] and SHAP [8], surveyed broadly
-by Guidotti et al. [22] and Arrieta et al. [23], answer the question <em>why did this model
-predict that?</em>, and Jiarpakdee et al. [10] apply them specifically to defect-prediction
-models in software engineering. They are the right tools when a learned model has made the
+<p class="first">Post-hoc explanation methods such as LIME [16] and SHAP [17], surveyed broadly
+by Guidotti et al. [18] and Arrieta et al. [19], answer the question <em>why did this model
+predict that?</em>, and Jiarpakdee et al. [20] apply them specifically to defect-prediction models in software engineering; a 2026 study extends the same idea to explaining the risk of individual code changes [21]. They are the right tools when a learned model has made the
 prediction. Here they are not applicable, and the reason is structural rather than a claim of
 superiority: a critical-path share or an articulation point has no hidden decision to
 reconstruct. The explanation is the computation. What remains to be explained is only the
 <em>prose</em>, and the risk there is fabrication rather than opacity&mdash;which is why the
-mechanism in Section IV-E is a verifier and not an attribution method.</p>
+mechanism in Section V-E is a verifier and not an attribution method.</p>
 
 <h3>D. Grounding generated text</h3>
 
-<p class="first">Retrieval-augmented generation [11] conditions a model on retrieved passages
+<p class="first">Retrieval-augmented generation [22] conditions a model on retrieved passages
 so that its output has a documentary basis, and the surrounding literature on hallucination
-[12] establishes how often that basis is still embellished. Pan et al. [24] survey the
-broader union of language models and knowledge graphs. The distinction here is one of
+[1] establishes how often that basis is still embellished. Pan et al. [23] and Peng et al. [24] survey the
+broader union of language models and knowledge graphs, and the graph-structured retrieval built on it. That line of work has since had to confront the same failure mode from the other side: when the graph itself is imperfect, retrieval drifts and the generated text inherits the error [25]. The distinction here is one of
 direction and of timing: retrieval conditions generation <em>beforehand</em> on text, while
 the present system verifies generation <em>afterwards</em> against a computed, typed
 structure whose legitimate identifiers form a closed set. Conditioning makes fabrication less
@@ -315,7 +314,97 @@ enforced evidence grounding; a deterministic fallback emitting an identical sche
 held-out real-world evaluation that reports its negative results.</p>
 
 
-<h2>III.&ensp;System Architecture</h2>
+<h2>III.&ensp;What Is Claimed, and How It Is Tested</h2>
+
+<p class="first">The architecture in Section IV is not interesting by itself. Plenty of
+systems put a graph next to a language model. The argument of this paper is narrower and
+falsifiable: that <em>this particular division of labour</em>&mdash;compute the risk, then let
+the model do nothing but describe one already-computed finding&mdash;buys four properties the
+ordinary arrangement cannot, and costs nothing measurable in return. This section states each
+property in the form in which it could be shown false, names the mechanism that produces it,
+and points at the measurement that tests it. Table I collects them.</p>
+
+<h3>A. Risk is a graph invariant, not a model&rsquo;s opinion</h3>
+
+<p class="first">The usual pattern gives a language model the project and asks what is wrong.
+Here the question is never asked. Each of six coordination risks is defined as a property of a
+typed graph&mdash;the longest path through the dependency DAG, the articulation points
+separating a person from a component, weighted degree over assignments, the ratio of
+commenting to assignment&mdash;and computed by an ordinary graph algorithm with no fitted
+parameter. The model is handed the answer, not the question.</p>
+
+<p>This is the claim everything else rests on, and it is the one most easily falsified: if the
+computed verdict disagreed with what a careful reader of the same data would conclude, nothing
+downstream would matter. It is tested twice, from opposite directions&mdash;against synthetic
+scenarios whose ground truth holds by construction, and against 987 real sprints where the
+outcome is known.</p>
+
+<h3>B. Prompt cost follows the number of anomalies, not the size of the project</h3>
+
+<p class="first">Because the model only ever sees a witness subgraph around one anomaly, and
+that subgraph is bounded by construction&mdash;one hop, at most eight neighbours per seed, at
+most sixty nodes&mdash;the prompt stops tracking the board. The falsifiable form is a growth
+rate: if prompt size grew with project size, the claim fails. It does not. Across a project
+grown 154&times;, the prompt grows 1.47&times;.</p>
+
+<p>The bound is less obvious than it looks, and we had it wrong at first. Capping the hop
+count alone is not enough, because one high-degree node&mdash;a release milestone touching four
+hundred tasks&mdash;drags the project back into the prompt through a single hop. The
+per-seed cap is what makes the bound hold, and Section V-C reports the measurement that
+exposed it.</p>
+
+<h3>C. Fabricated evidence becomes decidable rather than unlikely</h3>
+
+<p class="first">Grounding a model in retrieved text makes invention less likely; it does not
+make it checkable. Recent measurements are blunt about the residual: across frontier deep
+research agents, link validity stays above 94% while factual accuracy of the attributions
+falls between 39% and 77% [26], and the tools built to catch bad citations are themselves
+limited by metadata and coverage gaps [27].</p>
+
+<p>The mechanism here sidesteps that problem rather than improving on it. Because the model is
+shown a bounded subgraph, the set of identifiers it is <em>entitled</em> to cite is finite and
+known before generation. Checking a citation is therefore a membership test against a closed
+set, not a judgement about plausibility&mdash;which is why the result can be stated as a
+guarantee instead of a rate. The falsifiable form: inject fabricated references and see
+whether any survives.</p>
+
+<h3>D. The inversion costs nothing in detection quality</h3>
+
+<p class="first">A reader should suspect that confining the model this tightly must cost
+accuracy somewhere. The claim is that it does not, and it is tested by running both
+architectures over identical scenarios against identical ground truth, and by checking whether
+the model&rsquo;s narrated severity agrees with the computed one on the same input. If the
+narration quietly disagreed with the computation, the system would be deciding twice and
+reporting once.</p>
+
+<h3>E. A reported failure: added complexity did not survive unseen projects</h3>
+
+<p class="first">The fifth finding is not a claim in our favour and is reported because it
+bears directly on the four above. Three attempts to improve on the zero-parameter rule&mdash;a
+threshold sweep, individualised due dates, and a tuned logistic model&mdash;failed, and the
+third failed in the most instructive way: cross-validated F1 0.816 collapsed to 0.593 on
+projects the model had not seen, where the rule with nothing to fit scored 0.712. A paired
+test cannot separate the two. We do not claim the rule predicts better. We claim the tuned
+advantage did not cross a project boundary, and that when two predictors cannot be separated,
+the one that arrives with its evidence attached is the better engineering choice.</p>
+
+<div class="tablewrap">
+  <p class="tcap">Table I<br><span class="n">The claims, the mechanism behind each, and where each is tested</span></p>
+  <table>
+    <thead>
+      <tr><th>Claim</th><th>Mechanism</th><th>Result</th><th class="c">&sect;</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Risk is computed</td><td>graph invariants</td><td>F1 1.00 synth.</td><td class="c">VIII-B</td></tr>
+      <tr><td>Bounded prompt</td><td>witness subgraph</td><td>1.47&times; vs 154&times;</td><td class="c">VIII-A</td></tr>
+      <tr><td>Evidence decidable</td><td>closed-set check</td><td>200/200 stripped</td><td class="c">VIII-C</td></tr>
+      <tr><td>Nothing lost</td><td>narration only</td><td>F1 1.000; &kappa; 0.95</td><td class="c">VIII-G, H</td></tr>
+      <tr><td>Complexity failed</td><td>held-out split</td><td>0.816 &rarr; 0.593</td><td class="c">VIII-F</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>IV.&ensp;System Architecture</h2>
 
 <p class="first">The deployed system is three tiers plus two stores, shown in Fig. 1. A
 Next.js client presents a Kanban board, a risk dashboard and project settings. A FastAPI
@@ -331,34 +420,19 @@ convenience. The application tier is where data lives and where authorisation is
 the analysis tier is stateless, receives a project snapshot over an internal interface, and
 returns findings. A snapshot in, findings out means the analysis service can be run, tested
 and reasoned about without a database, and it is why the entire evaluation harness in
-Section VI can replay 987 historical sprints through exactly the code path the product uses.</p>
+Section VII can replay 987 historical sprints through exactly the code path the product uses.</p>
 
 
 
-<p>Within the analysis tier the figure draws the distinction the paper is about. The
-deterministic core compiles the graph, computes the risk metrics and selects the witness
-subgraph; it performs no model call and contains no randomness. The narration layer
-assembles a prompt, calls a model adapter and verifies the result. The arrow between them
-carries the witness subgraph and nothing else. The dashed line leaving the core shows the
-risk scores travelling back to the application tier directly: if the narration layer fails,
-is rate-limited, or is switched off entirely, the numbers the product displays are
-unchanged.</p>
+<p>Within the analysis tier the figure draws the distinction the paper is about, as three bands. The deterministic core compiles the graph, computes the risk metrics and selects the witness subgraph; it makes no model call and contains no randomness, so the same board gives the same numbers twice. The agent layer runs the coordinator and its specialists over those numbers and emits one output schema whichever path produced it. The narration layer assembles a prompt, calls a model adapter and verifies what comes back, and it is the only band that may reach a language model at all. The heavy connector between the second and third bands carries one finding and its witness subgraph, and nothing else crosses. The dashed line leaving the core shows the risk scores reaching the application tier without entering the third band: if the narration layer fails, is rate-limited, or is switched off entirely, the prose disappears and the numbers the product displays are unchanged.</p>
 
 <figure class="wide">
   <img src="figures/fig1_architecture_blocks.svg" alt="System architecture block diagram">
-  <figcaption><span class="lbl">Fig. 1.</span>&ensp;System architecture. Blocks are deployed
-  subsystems; lines are interfaces between them. The analysis tier is divided into a
-  deterministic core, which performs every computation that produces a number, and a
-  narration layer, which may call a language model. Exactly one artefact crosses the boundary
-  between them&mdash;the witness subgraph&mdash;and the risk scores reach the application tier
-  without passing through the narration layer at all (dashed). The external LLM provider is
-  optional: with no key configured the model adapter uses a rule-based path that emits the
-  same schema, which is the configuration under which every result in Section VII was
-  measured.</figcaption>
+  <figcaption><span class="lbl">Fig. 1.</span>&ensp;System architecture. Blocks are deployed subsystems; lines are interfaces between them; nothing here is a decision or a step in time. The analysis tier is drawn as three bands because that is where the claims of Section III live. Band 1 computes every number the product reports, with no model call and no fitted parameter. Band 2 runs the specialists and aggregates them, emitting one schema whichever path produced it. Band 3 is the only place a language model may be called, and the heavy connector marks the only artefact that reaches it: one finding and its witness subgraph. The risk scores travel to the application tier without entering band 3 at all (dashed), so a model that is absent, rate-limited or switched off changes the prose and not the numbers &mdash; which is the configuration under which every result in Section VIII was measured.</figcaption>
 </figure>
 
 
-<h2>IV.&ensp;Graph-Grounded Prompting</h2>
+<h2>V.&ensp;Graph-Grounded Prompting</h2>
 
 <h3>A. The project graph</h3>
 
@@ -380,24 +454,23 @@ a risk analysis that requires its own data collection does not get run.</p>
 <h3>B. Risk as a graph property</h3>
 
 <p class="first">Each of six risk categories is a question about the graph, with a documented
-threshold (Table I). None of them involves a model, and none of them involves a fitted
-parameter. Building the graph also produced a correctness result that was not sought: the
+threshold (Table II). None of them involves a model, and none of them involves a fitted parameter. Nor is any graph <em>learning</em> involved: these are classical invariants computed on the graph, not the learned node representations of a graph neural network [28], which is what makes the verdict reproducible and its explanation the computation itself. Building the graph also produced a correctness result that was not sought: the
 pre-existing API rejected a task that depended on itself but accepted a three-hop cycle
 A&nbsp;&rarr;&nbsp;B&nbsp;&rarr;&nbsp;C&nbsp;&rarr;&nbsp;A, because it only checked for direct
 self-loops. Once the graph exists, genuine cycle detection is a library call.</p>
 
 <div class="tablewrap">
-  <p class="tcap">Table I<br><span class="n">The six risk categories as graph computations</span></p>
+  <p class="tcap">Table II<br><span class="n">The six risk categories as graph computations</span></p>
   <table>
     <thead>
       <tr><th>Risk</th><th>Computation</th><th class="c">Threshold</th></tr>
     </thead>
     <tbody>
       <tr><td>Dependency</td><td>Longest path through the <span class="mono">BLOCKS</span> DAG</td><td class="c">&ge;&nbsp;0.25</td></tr>
-      <tr><td>Concentration</td><td>Betweenness centrality [25]</td><td class="c">&mdash;</td></tr>
+      <tr><td>Concentration</td><td>Betweenness centrality [29]</td><td class="c">&mdash;</td></tr>
       <tr><td>Knowledge</td><td>Articulation points, Person&ndash;Component</td><td class="c">&ge;&nbsp;2 tasks</td></tr>
       <tr><td>Workload</td><td>Weighted degree over assignments</td><td class="c">&ge;&nbsp;1.50</td></tr>
-      <tr><td>Coordination</td><td>Community structure [26], isolated members</td><td class="c">&mdash;</td></tr>
+      <tr><td>Coordination</td><td>Community structure [30], isolated members</td><td class="c">&mdash;</td></tr>
       <tr><td>Silent member</td><td>Comment degree &divide; assignment degree</td><td class="c">&ge;&nbsp;0.30</td></tr>
       <tr><td>Delay</td><td>Open tasks past due date</td><td class="c">&ge;&nbsp;0.10</td></tr>
     </tbody>
@@ -429,7 +502,7 @@ saving next to the subgraph bound but is free.</p>
 <p class="first">The prompt contains one finding, its witness, and an instruction to explain
 the finding in prose, citing node identifiers from the witness. It does not contain the
 project, the other five risk categories, or the score. The model is not asked whether the
-finding is correct, and its answer is not used to compute anything. Section VII-F reports how
+finding is correct, and its answer is not used to compute anything. Section VIII-F reports how
 closely its narrated severity tracks the deterministic one; the point of that measurement is
 to confirm the model is narrating rather than quietly re-deciding.</p>
 
@@ -438,17 +511,17 @@ to confirm the model is narrating rather than quietly re-deciding.</p>
 <p class="first">After generation, each cited identifier is resolved against the identifiers
 present in the witness. Unresolvable citations are dropped, and if dropping them empties the
 evidence list the finding is still shown&mdash;with its computed score and no narration&mdash;rather
-than being suppressed. This is a closed-set membership test, not a plausibility judgement,
-which is the whole reason it can be stated as a guarantee rather than a tendency.</p>
+than being suppressed. This is a closed-set membership test, not a plausibility judgement, which is the whole
+reason it can be stated as a guarantee rather than a tendency &mdash; and it is worth noting that the alternative, checking citations after the fact against the open world, is measurably hard: current detection tools are limited by reference extraction, metadata gaps and inconsistent verification [27].</p>
 
 <p>One implementation detail is worth recording because it was a silent failure for some
 time. The verifier treated an empty list of legitimate identifiers as <em>no filter
 configured</em> rather than as <em>nothing is legitimate</em>, so in exactly the situation
 where every citation should have been rejected, every citation passed. The test that caught
-it injects fabricated references deliberately; the result in Section VII-C is from that
+it injects fabricated references deliberately; the result in Section VIII-C is from that
 test.</p>
 
-<h2>V.&ensp;Multi-Agent Design</h2>
+<h2>VI.&ensp;Multi-Agent Design</h2>
 
 <p class="first">Five agents are active. A coordinator assembles the snapshot and runs
 three specialists concurrently&mdash;Planning, which reads milestones and capacity; Progress,
@@ -467,11 +540,11 @@ downstream code is written to depend on one, and the deterministic path is not a
 mode bolted on afterwards&mdash;it is the reference implementation, and the configuration in
 which this paper&rsquo;s results were produced.</p>
 
-<h2>VI.&ensp;Experimental Setup</h2>
+<h2>VII.&ensp;Experimental Setup</h2>
 
 <h3>A. Dataset</h3>
 
-<p class="first">Real-world evaluation uses TAWOS [1], a published collection of agile
+<p class="first">Real-world evaluation uses TAWOS [31], a published collection of agile
 open-source projects drawn from twelve public Jira installations. We parsed the full dump
 with no parse errors and reconciled the row counts against the published totals:
 39&nbsp;projects, 206,162&nbsp;users, 4,594&nbsp;sprints, 458,232&nbsp;issues,
@@ -479,7 +552,7 @@ with no parse errors and reconciled the row counts against the published totals:
 
 <p>TAWOS has no due-date field, so the prediction target must be derived. A sprint is
 labelled <em>delayed</em> when at least 30% of its issues were unresolved at sprint end.
-This is defensible and it is a proxy; Section IX treats it as the first threat to validity
+This is defensible and it is a proxy; Section X treats it as the first threat to validity
 rather than a settled definition. Restricting to closed sprints with an end date and at least
 fifteen issues gives 987 eligible sprints across 31 projects, 58.8% of them positive.</p>
 
@@ -513,7 +586,7 @@ the held-out projects were touched.</p>
 implementation of the other five, 180 scenarios&mdash;90 positive and 90 negative, 30 per
 category&mdash;are generated with a deterministically injected anomaly, so ground truth holds
 by construction. These support correctness checking, a boundary sweep and the ablation, and
-Section VII-B states plainly what they do and do not demonstrate.</p>
+Section VIII-B states plainly what they do and do not demonstrate.</p>
 
 <h3>E. Metrics</h3>
 
@@ -521,15 +594,15 @@ Section VII-B states plainly what they do and do not demonstrate.</p>
 included but de-emphasised given the class balance; AUC-ROC for threshold-independent
 ranking; and the Brier score for calibration. Paired comparisons use exact McNemar tests on
 the same sprints, and interval estimates use a cluster bootstrap that resamples
-<em>projects</em> with replacement over 2,000 replicates [3], matching the unit of the split.
-Model&ndash;rule agreement is Cohen&rsquo;s <em>&kappa;</em> [14], read on the Landis&ndash;Koch
-scale [15]. Prompt cost is reported in tokens, and latency as p50 and p95.</p>
+<em>projects</em> with replacement over 2,000 replicates [32], matching the unit of the split.
+Model&ndash;rule agreement is Cohen&rsquo;s <em>&kappa;</em> [33], read on the Landis&ndash;Koch
+scale [34]. Prompt cost is reported in tokens, and latency as p50 and p95.</p>
 
-<h2>VII.&ensp;Results</h2>
+<h2>VIII.&ensp;Results</h2>
 
 <h3>A. Prompt cost does not follow project size</h3>
 
-<p class="first">Table II and Fig. 2 give the efficiency result, measured identically for
+<p class="first">@@Table IIII@@ and Fig. 2 give the efficiency result, measured identically for
 both architectures. As the project grows from 13 to 2,003 tasks&mdash;a factor of
 154&mdash;the graph-grounded prompt grows from 266 to 390 tokens, a factor of 1.47. Naive
 full-dataset prompting grows from 1,050 to 189,834 tokens. At the largest size the ratio is
@@ -545,7 +618,7 @@ is something a team runs nightly, which returns us to detecting risk after it ha
 happened.</p>
 
 <div class="tablewrap">
-  <p class="tcap">Table II<br><span class="n">Prompt tokens against project size</span></p>
+  <p class="tcap">@@Table IIII@@<br><span class="n">Prompt tokens against project size</span></p>
   <table>
     <thead>
       <tr><th class="n">Tasks</th><th class="n">Graph-grounded</th><th class="n">Naive</th><th class="n">Ratio</th></tr>
@@ -584,7 +657,7 @@ deliberately, 200 of 200 were removed, leaving no unresolvable citation in any o
 guarantee is narrow and should be stated narrowly: every surviving citation names a node that
 exists in the witness the model was shown. It does not follow that the surviving citation is
 the <em>most relevant</em> node, and nothing here measures whether the resulting explanation
-helps a manager&mdash;see Section IX.</p>
+helps a manager&mdash;see Section X.</p>
 
 
 <h3>D. Mid-sprint early warning on unseen projects</h3>
@@ -594,11 +667,11 @@ at a time when the answer can still change what they do. At each checkpoint the 
 reconstructed as it then stood, the share of scope still unfinished at the deadline is
 projected from work completed against time elapsed, and delay risk is raised using the same
 severity cut-offs the product uses everywhere else. Nothing was tuned for this experiment.
-Table III reports the 270 held-out sprints from 22 unseen projects.</p>
+@@Table IIV@@ reports the 270 held-out sprints from 22 unseen projects.</p>
 
 
 <div class="tablewrap wide">
-  <p class="tcap">Table III<br><span class="n">Mid-sprint early warning, 270 held-out sprints from 22 unseen projects (48.9% positive)</span></p>
+  <p class="tcap">@@Table IIV@@<br><span class="n">Mid-sprint early warning, 270 held-out sprints from 22 unseen projects (48.9% positive)</span></p>
   <table class="wide">
     <thead>
       <tr>
@@ -620,6 +693,14 @@ Table III reports the 270 held-out sprints from 22 unseen projects.</p>
   </table>
 </div>
 
+<figure class="wide">
+  <img src="../ai-service/eval/figures/fig2_token_scaling.svg" alt="Token scaling, log-log">
+  <figcaption><span class="lbl">Fig. 2.</span>&ensp;Prompt tokens against project size, both
+  axes logarithmic. The graph-grounded series flattens once the witness bound binds; the
+  full-dataset series grows linearly with the board. The annotated gap at 2,003 tasks is
+  486.8&times;.</figcaption>
+</figure>
+
 
 <p>Halfway through a sprint the warning carries information: it drops roughly a quarter of
 the sprints that a flag-everything policy would raise, while still catching 90% of those that
@@ -633,22 +714,15 @@ projection&rsquo;s 0.792, and 0.881 against 0.874 at three-quarters. The project
 in the system by being the same object that explains the risk and carries its evidence, not
 by ordering sprints more accurately than counting unfinished issues.</p>
 
-<figure class="wide">
-  <img src="../ai-service/eval/figures/fig2_token_scaling.svg" alt="Token scaling, log-log">
-  <figcaption><span class="lbl">Fig. 2.</span>&ensp;Prompt tokens against project size, both
-  axes logarithmic. The graph-grounded series flattens once the witness bound binds; the
-  full-dataset series grows linearly with the board. The annotated gap at 2,003 tasks is
-  486.8&times;.</figcaption>
-</figure>
 
 <h3>E. Sprint-end evaluation, and a learned comparator</h3>
 
-<p class="first">Evaluated after the deadline on the same held-out projects (Table IV), the
+<p class="first">Evaluated after the deadline on the same held-out projects (Table V), the
 zero-parameter graph rule reaches F1 0.712 with recall 1.000, and a tuned four-feature
 logistic model reaches 0.593. The cluster bootstrap puts the rule&rsquo;s F1 interval at [0.610, 0.814]. Fig. 3 sets both against the story-point baseline.</p>
 
 <div class="tablewrap">
-  <p class="tcap">Table IV<br><span class="n">Sprint-end, 270 held-out sprints</span></p>
+  <p class="tcap">Table V<br><span class="n">Sprint-end, 270 held-out sprints</span></p>
   <table>
     <thead>
       <tr><th>Model</th><th class="n">P</th><th class="n">R</th><th class="n">F1</th><th class="n">Acc</th><th class="n">AUC</th></tr>
@@ -666,7 +740,7 @@ the deadline, a delayed sprint is by definition one with unfinished work past it
 which is exactly the condition the rule tests. It is a property of evaluating after the fact,
 not a skill, and its bootstrap interval of [1.000, 1.000] is correct precisely because the
 quantity has no variance&mdash;not one of the 22 held-out projects produces a false negative.
-The mid-sprint evaluation in Section VII-D, where the outcome is not yet determined, is where
+The mid-sprint evaluation in Section VIII-D, where the outcome is not yet determined, is where
 recall means something.</p>
 
 <p>The second caution concerns what may be concluded about the learned model. The rule&rsquo;s F1
@@ -678,6 +752,13 @@ defensible claim is therefore not that the rule predicts better than the learned
 that the learned model&rsquo;s tuned advantage did not survive the move to unseen projects, and
 that the simpler object is the one that arrives with its evidence attached.</p>
 
+
+<figure class="wide">
+  <img src="../ai-service/eval/figures/fig3_holdout_tawos.svg" alt="Held-out precision, recall and F1">
+  <figcaption><span class="lbl">Fig. 3.</span>&ensp;Held-out performance on 270 sprints from
+  22 unseen projects. Bars carry hatch patterns and direct value labels because IEEE pages are
+  printed in greyscale, where the fill colours would otherwise collapse.</figcaption>
+</figure>
 
 <h3>F. Three attempts that failed</h3>
 
@@ -694,7 +775,7 @@ result, it is a misconceived experiment, and it was discarded as such.</p>
 observed cycle time (2.96 days per story point) did un-collapse the signal, moving the median
 overdue ratio to 0.76, but AUC fell from 0.581 to 0.531. Story points are too noisy a duration
 proxy to carry per-issue deadlines&mdash;a finding consistent with the replication literature
-on story-point estimation [19].</p>
+on story-point estimation [6].</p>
 
 <p><h4>3) The learned model overfitted across project boundaries.</h4> A four-feature logistic
 model with three-fold group cross-validation by project reached CV F1 0.816 and AUC 0.887, and
@@ -703,20 +784,12 @@ that is mechanically coupled to the label rather than independently predictive. 
 collapse of that size across a project boundary is the signature of fitting project-specific
 structure, and it is the reason this paper leads with a rule that has nothing to fit.</p>
 
-<figure class="wide">
-  <img src="../ai-service/eval/figures/fig3_holdout_tawos.svg" alt="Held-out precision, recall and F1">
-  <figcaption><span class="lbl">Fig. 3.</span>&ensp;Held-out performance on 270 sprints from
-  22 unseen projects. Bars carry hatch patterns and direct value labels because IEEE pages are
-  printed in greyscale, where the fill colours would otherwise collapse.</figcaption>
-</figure>
 
 <h3>G. Does grounding cost accuracy?</h3>
 
 <p class="first">The ablation scores both architectures on identical scenarios against
 identical ground truth (36 scenarios, 18 positive, no failed calls). The graph-grounded path
-scores F1 1.000; naive full-dataset prompting scores 0.947, with per-category results
-identical on five of six (Fig. 4). The entire gap is coordination risk, where the naive path
-reaches F1 0.75 at precision 0.60.</p>
+scores F1 1.000; naive full-dataset prompting scores 0.947. The per-category results are identical on five of the six&mdash;dependency, knowledge, workload, delay and silent member all score 1.000 under both architectures&mdash;so the entire difference is coordination risk, where the naive path reaches F1 0.75 at precision 0.60. Coordination is the category that depends on the shape of the collaboration graph rather than on any single task&rsquo;s attributes, which is the one place a reader of the serialised board has to infer what the graph states outright.</p>
 
 <p>The comparison is deliberately tilted toward the naive baseline: tiny projects where full
 context is cheap and fits comfortably, a good-faith prompt defining all six categories, and
@@ -728,15 +801,9 @@ against it; stricter scoring would likely widen the gap, and we do not claim it.
 here says anything about naive accuracy <em>at scale</em>, which is untested and, at 190,000
 tokens per scenario, largely untestable on an ordinary budget&mdash;which is itself part of
 the argument. The mean prompts in this ablation were 1,109 tokens against 1,804, a ratio of
-1.6&times;; the 487&times; figure belongs to Section VII-A and the two should not be
+1.6&times;; the 487&times; figure belongs to Section VIII-A and the two should not be
 conflated.</p>
 
-<figure class="wide">
-  <img src="../ai-service/eval/figures/fig4_ablation.svg" alt="Per-risk-type ablation">
-  <figcaption><span class="lbl">Fig. 4.</span>&ensp;Per-category F1, graph-grounded against
-  naive full-dataset prompting, on identical scenarios. Five categories are identical; the
-  whole difference is coordination risk.</figcaption>
-</figure>
 
 
 <h3>H. Does the model narrate, or quietly re-decide?</h3>
@@ -745,7 +812,7 @@ conflated.</p>
 overriding the computed verdict. To test that, 90 live calls were made across all six
 categories, and the narrated severity was compared with the deterministic verdict on
 identical input. Cohen&rsquo;s <em>&kappa;</em> = 0.9533 over the 37 schema-valid responses&mdash;almost
-perfect agreement on the Landis&ndash;Koch scale [15]&mdash;with per-category agreement of
+perfect agreement on the Landis&ndash;Koch scale [34]&mdash;with per-category agreement of
 1.00 for dependency (<em>n</em> = 14) and workload (<em>n</em> = 8), and 0.86 for knowledge
 (<em>n</em> = 12).</p>
 
@@ -767,7 +834,7 @@ replay of the demonstration that re-checks every number the demonstration script
 Every figure is regenerated from committed result files, so a figure cannot drift away from
 the evaluation that produced it.</p>
 
-<h2>VIII.&ensp;Discussion</h2>
+<h2>IX.&ensp;Discussion</h2>
 
 <p class="first">The results support a narrower claim than the architecture might invite. What
 is demonstrated is that confining a language model to narration costs nothing measurable in
@@ -798,7 +865,7 @@ rather than a bare score, which at least makes a claim about a person contestabl
 person. We would not deploy this as an input to performance review, and we think a paper
 proposing it should say so.</p>
 
-<h2>IX.&ensp;Threats to Validity</h2>
+<h2>X.&ensp;Threats to Validity</h2>
 
 <p class="first"><em>Construct.</em> The delay label is a proxy: TAWOS has no due dates, and
 &ldquo;at least 30% unresolved at sprint end&rdquo; is a defensible choice rather than a canonical one.
@@ -825,7 +892,7 @@ grounding proves citations are real, not that explanations are useful. And there
 longitudinal study: no evidence is offered that a flagged risk, acted upon, changes an outcome
 weeks later. Two designed agents remain unimplemented.</p>
 
-<h2>X.&ensp;Conclusion</h2>
+<h2>XI.&ensp;Conclusion</h2>
 
 <p class="first">Asking a language model to find risk in a project is expensive,
 non-reproducible and unverifiable. Computing the risk from a typed graph and asking the model
@@ -856,32 +923,40 @@ under terms that permit this kind of secondary analysis.</p>
 <h2>References</h2>
 
 <ol class="refs">
-<li>V. Tawosi, A. Al-Subaihin, R. Moussa, and F. Sarro, &ldquo;A versatile dataset of agile open source software projects,&rdquo; in <em>Proc. 19th Int. Conf. Mining Software Repositories (MSR)</em>, 2022, pp. 420&ndash;424, doi: 10.1145/3524842.3528029.</li>
-<li>A. A. Hagberg, D. A. Schult, and P. J. Swart, &ldquo;Exploring network structure, dynamics, and function using NetworkX,&rdquo; in <em>Proc. 7th Python in Science Conf. (SciPy)</em>, 2008, pp. 11&ndash;15.</li>
-<li>B. Efron, &ldquo;Bootstrap methods: Another look at the jackknife,&rdquo; <em>Ann. Statist.</em>, vol. 7, no. 1, pp. 1&ndash;26, 1979.</li>
-<li>S. Hong <em>et al.</em>, &ldquo;MetaGPT: Meta programming for a multi-agent collaborative framework,&rdquo; in <em>Proc. Int. Conf. Learning Representations (ICLR)</em>, 2024, arXiv:2308.00352.</li>
-<li>C. Qian <em>et al.</em>, &ldquo;ChatDev: Communicative agents for software development,&rdquo; in <em>Proc. 62nd Annu. Meeting Assoc. Computational Linguistics (ACL)</em>, 2024, pp. 15174&ndash;15186, arXiv:2307.07924.</li>
-<li>X. Liu <em>et al.</em>, &ldquo;AgentBench: Evaluating LLMs as agents,&rdquo; in <em>Proc. Int. Conf. Learning Representations (ICLR)</em>, 2024, arXiv:2308.03688.</li>
-<li>S. Yao <em>et al.</em>, &ldquo;ReAct: Synergizing reasoning and acting in language models,&rdquo; in <em>Proc. Int. Conf. Learning Representations (ICLR)</em>, 2023, arXiv:2210.03629.</li>
-<li>S. M. Lundberg and S.-I. Lee, &ldquo;A unified approach to interpreting model predictions,&rdquo; in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 30, 2017, pp. 4765&ndash;4774.</li>
-<li>M. T. Ribeiro, S. Singh, and C. Guestrin, &ldquo;&lsquo;Why should I trust you?&rsquo;: Explaining the predictions of any classifier,&rdquo; in <em>Proc. 22nd ACM SIGKDD Int. Conf. Knowledge Discovery and Data Mining (KDD)</em>, 2016, pp. 1135&ndash;1144.</li>
-<li>J. Jiarpakdee, C. Tantithamthavorn, H. K. Dam, and J. Grundy, &ldquo;An empirical study of model-agnostic techniques for defect prediction models,&rdquo; <em>IEEE Trans. Softw. Eng.</em>, vol. 48, no. 1, pp. 166&ndash;185, 2022.</li>
-<li>P. Lewis <em>et al.</em>, &ldquo;Retrieval-augmented generation for knowledge-intensive NLP tasks,&rdquo; in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 33, 2020, pp. 9459&ndash;9474.</li>
 <li>Z. Ji <em>et al.</em>, &ldquo;Survey of hallucination in natural language generation,&rdquo; <em>ACM Comput. Surv.</em>, vol. 55, no. 12, pp. 1&ndash;38, 2023.</li>
-<li>J. Zhou <em>et al.</em>, &ldquo;Graph neural networks: A review of methods and applications,&rdquo; <em>AI Open</em>, vol. 1, pp. 57&ndash;81, 2020.</li>
-<li>J. Cohen, &ldquo;A coefficient of agreement for nominal scales,&rdquo; <em>Educ. Psychol. Meas.</em>, vol. 20, no. 1, pp. 37&ndash;46, 1960.</li>
-<li>J. R. Landis and G. G. Koch, &ldquo;The measurement of observer agreement for categorical data,&rdquo; <em>Biometrics</em>, vol. 33, no. 1, pp. 159&ndash;174, 1977.</li>
-<li>T. Hall, S. Beecham, D. Bowes, D. Gray, and S. Counsell, &ldquo;A systematic literature review on fault prediction performance in software engineering,&rdquo; <em>IEEE Trans. Softw. Eng.</em>, vol. 38, no. 6, pp. 1276&ndash;1304, 2012.</li>
+<li>A. A. Hagberg, D. A. Schult, and P. J. Swart, &ldquo;Exploring network structure, dynamics, and function using NetworkX,&rdquo; in <em>Proc. 7th Python in Science Conf. (SciPy)</em>, 2008, pp. 11&ndash;15.</li>
 <li>M. J&oslash;rgensen and M. Shepperd, &ldquo;A systematic review of software development cost estimation studies,&rdquo; <em>IEEE Trans. Softw. Eng.</em>, vol. 33, no. 1, pp. 33&ndash;53, 2007.</li>
+<li>T. Hall, S. Beecham, D. Bowes, D. Gray, and S. Counsell, &ldquo;A systematic literature review on fault prediction performance in software engineering,&rdquo; <em>IEEE Trans. Softw. Eng.</em>, vol. 38, no. 6, pp. 1276&ndash;1304, 2012.</li>
 <li>M. Choetkiertikul, H. K. Dam, T. Tran, T. Pham, A. Ghose, and T. Menzies, &ldquo;A deep learning model for estimating story points,&rdquo; <em>IEEE Trans. Softw. Eng.</em>, vol. 45, no. 7, pp. 637&ndash;656, 2019.</li>
 <li>V. Tawosi, R. Moussa, and F. Sarro, &ldquo;Agile effort estimation: Have we solved the problem yet? Insights from a replication study,&rdquo; <em>IEEE Trans. Softw. Eng.</em>, 2023, doi: 10.1109/TSE.2022.3228739.</li>
+<li>P. P. Shetty, A. Balakrishnan, M. Xu, X. Xi, and Z. Yu, &ldquo;Story point estimation using large language models,&rdquo; 2026, arXiv:2603.06276.</li>
+<li>S. Hong <em>et al.</em>, &ldquo;MetaGPT: Meta programming for a multi-agent collaborative framework,&rdquo; in <em>Proc. Int. Conf. Learning Representations (ICLR)</em>, 2024, arXiv:2308.00352.</li>
+<li>C. Qian <em>et al.</em>, &ldquo;ChatDev: Communicative agents for software development,&rdquo; in <em>Proc. 62nd Annu. Meeting Assoc. Computational Linguistics (ACL)</em>, 2024, pp. 15174&ndash;15186, arXiv:2307.07924.</li>
 <li>Q. Wu <em>et al.</em>, &ldquo;AutoGen: Enabling next-gen LLM applications via multi-agent conversation,&rdquo; 2023, arXiv:2308.08155.</li>
+<li>S. Yao <em>et al.</em>, &ldquo;ReAct: Synergizing reasoning and acting in language models,&rdquo; in <em>Proc. Int. Conf. Learning Representations (ICLR)</em>, 2023, arXiv:2210.03629.</li>
+<li>X. Liu <em>et al.</em>, &ldquo;AgentBench: Evaluating LLMs as agents,&rdquo; in <em>Proc. Int. Conf. Learning Representations (ICLR)</em>, 2024, arXiv:2308.03688.</li>
 <li>L. Wang <em>et al.</em>, &ldquo;A survey on large language model based autonomous agents,&rdquo; <em>Front. Comput. Sci.</em>, vol. 18, no. 6, art. 186345, 2024, doi: 10.1007/s11704-024-40231-1.</li>
+<li>J. He, C. Treude, and D. Lo, &ldquo;LLM-based multi-agent systems for software engineering: Literature review, vision and the road ahead,&rdquo; <em>ACM Trans. Softw. Eng. Methodol.</em>, vol. 34, no. 5, pp. 1&ndash;30, 2025, doi: 10.1145/3712003.</li>
+<li>M. C. S. De Oliveira, M. O. Ibiyo, M. Gianrusso, C. Di Sipio, D. Di Ruscio, and P. T. Nguyen, &ldquo;Developing LLM-based multi-agent systems in software engineering: A mixed-method experience report,&rdquo; 2026, arXiv:2608.11965.</li>
+<li>M. T. Ribeiro, S. Singh, and C. Guestrin, &ldquo;&lsquo;Why should I trust you?&rsquo;: Explaining the predictions of any classifier,&rdquo; in <em>Proc. 22nd ACM SIGKDD Int. Conf. Knowledge Discovery and Data Mining (KDD)</em>, 2016, pp. 1135&ndash;1144.</li>
+<li>S. M. Lundberg and S.-I. Lee, &ldquo;A unified approach to interpreting model predictions,&rdquo; in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 30, 2017, pp. 4765&ndash;4774.</li>
 <li>R. Guidotti, A. Monreale, S. Ruggieri, F. Turini, F. Giannotti, and D. Pedreschi, &ldquo;A survey of methods for explaining black box models,&rdquo; <em>ACM Comput. Surv.</em>, vol. 51, no. 5, pp. 1&ndash;42, 2018.</li>
 <li>A. B. Arrieta <em>et al.</em>, &ldquo;Explainable artificial intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI,&rdquo; <em>Inf. Fusion</em>, vol. 58, pp. 82&ndash;115, 2020.</li>
+<li>J. Jiarpakdee, C. Tantithamthavorn, H. K. Dam, and J. Grundy, &ldquo;An empirical study of model-agnostic techniques for defect prediction models,&rdquo; <em>IEEE Trans. Softw. Eng.</em>, vol. 48, no. 1, pp. 166&ndash;185, 2022.</li>
+<li>Y. Liu <em>et al.</em>, &ldquo;A preliminary study on explaining risk of code changes using LLM-based prediction models,&rdquo; 2026, arXiv:2607.02782.</li>
+<li>P. Lewis <em>et al.</em>, &ldquo;Retrieval-augmented generation for knowledge-intensive NLP tasks,&rdquo; in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 33, 2020, pp. 9459&ndash;9474.</li>
 <li>S. Pan, L. Luo, Y. Wang, C. Chen, J. Wang, and X. Wu, &ldquo;Unifying large language models and knowledge graphs: A roadmap,&rdquo; <em>IEEE Trans. Knowl. Data Eng.</em>, vol. 36, no. 7, pp. 3580&ndash;3599, 2024.</li>
+<li>B. Peng, Y. Zhu, Y. Liu, X. Bo, H. Shi, C. Hong, Y. Zhang, and S. Tang, &ldquo;Graph retrieval-augmented generation: A survey,&rdquo; <em>ACM Trans. Inf. Syst.</em>, 2025, doi: 10.1145/3777378.</li>
+<li>Y. Ma, J. Xu, T. Wen, Q. Chen, J. Li, R. Wang, M. Li, S. Liang, and K. Qin, &ldquo;Toward robust GraphRAG: Mitigating retrieval drift and hallucination from imperfect knowledge graphs,&rdquo; 2026, arXiv:2603.14828.</li>
+<li>H. Onweller, E. Lumer, A. Huber, P. Ramchandani, V. K. Subbiah, and C. Feld, &ldquo;Cited but not verified: Parsing and evaluating source attribution in LLM deep research agents,&rdquo; 2026, arXiv:2605.06635.</li>
+<li>F. Badalova and P. Mayr, &ldquo;Detecting hallucinated and suspicious citations: What current tools can and cannot do,&rdquo; 2026, arXiv:2607.22693.</li>
+<li>J. Zhou <em>et al.</em>, &ldquo;Graph neural networks: A review of methods and applications,&rdquo; <em>AI Open</em>, vol. 1, pp. 57&ndash;81, 2020.</li>
 <li>U. Brandes, &ldquo;A faster algorithm for betweenness centrality,&rdquo; <em>J. Math. Sociol.</em>, vol. 25, no. 2, pp. 163&ndash;177, 2001.</li>
 <li>V. D. Blondel, J.-L. Guillaume, R. Lambiotte, and E. Lefebvre, &ldquo;Fast unfolding of communities in large networks,&rdquo; <em>J. Stat. Mech.: Theory Exp.</em>, vol. 2008, no. 10, P10008, 2008.</li>
+<li>V. Tawosi, A. Al-Subaihin, R. Moussa, and F. Sarro, &ldquo;A versatile dataset of agile open source software projects,&rdquo; in <em>Proc. 19th Int. Conf. Mining Software Repositories (MSR)</em>, 2022, pp. 420&ndash;424, doi: 10.1145/3524842.3528029.</li>
+<li>B. Efron, &ldquo;Bootstrap methods: Another look at the jackknife,&rdquo; <em>Ann. Statist.</em>, vol. 7, no. 1, pp. 1&ndash;26, 1979.</li>
+<li>J. Cohen, &ldquo;A coefficient of agreement for nominal scales,&rdquo; <em>Educ. Psychol. Meas.</em>, vol. 20, no. 1, pp. 37&ndash;46, 1960.</li>
+<li>J. R. Landis and G. G. Koch, &ldquo;The measurement of observer agreement for categorical data,&rdquo; <em>Biometrics</em>, vol. 33, no. 1, pp. 159&ndash;174, 1977.</li>
 </ol>
 
 </div>
