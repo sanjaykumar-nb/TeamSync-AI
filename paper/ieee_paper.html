@@ -132,10 +132,19 @@
   ol.refs {
     font-size: 8pt;
     line-height: 1.17;
-    padding-left: 15pt;
+    list-style: none;
+    padding-left: 0;
     margin: 2pt 0 0 0;
+    counter-reset: ref;
   }
-  ol.refs li { margin-bottom: 1.6pt; text-align: justify; }
+  ol.refs li {
+    counter-increment: ref;
+    margin-bottom: 1.6pt;
+    text-align: justify;
+    padding-left: 15pt;
+    text-indent: -15pt;
+  }
+  ol.refs li::before { content: "[" counter(ref) "] "; }
 </style>
 </head>
 <body>

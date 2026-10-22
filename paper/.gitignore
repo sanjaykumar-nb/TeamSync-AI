@@ -1,4 +1,5 @@
-# preview renders, not sources
+# preview renders and conversion checks, not sources
 _pages/
+_docx_check.pdf
 figures/*.png
 *.preview.html
