@@ -29,9 +29,10 @@ apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin do
 systemctl enable --now docker
 usermod -aG docker ubuntu
 
-# 1 GB of RAM is enough to run the stack, not to build without a little swap.
+# 2 GB of RAM runs the stack comfortably but `next build` wants more than that
+# for a few minutes, so give it swap to lean on rather than a bigger instance.
 if [ ! -f /swapfile ]; then
-  fallocate -l 2G /swapfile
+  fallocate -l 4G /swapfile
   chmod 600 /swapfile
   mkswap /swapfile
   swapon /swapfile
@@ -53,8 +54,17 @@ ENV
 chmod 600 .env
 chown -R ubuntu:ubuntu /opt/teamsync
 
-# The frontend is hosted elsewhere (Netlify), so only the API side runs here.
-docker compose -f docker-compose.yml -f docker-compose.prod.yml \
-  up -d --build postgres backend ai-service caddy
+# Everything on one box: Caddy serves the app on DOMAIN and the API on API_DOMAIN,
+# so CORS_ORIGINS (derived from DOMAIN) is correct by construction, and both names
+# resolve to this instance, which is what the ACME challenge needs.
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 
-echo "TeamSync is up. API: https://$API_DOMAIN  app (set separately): https://$APP_DOMAIN"
+cat > /etc/motd <<MOTD
+
+  TeamSync AI
+    app   https://$APP_DOMAIN
+    API   https://$API_DOMAIN/health
+    code  /opt/teamsync      setup log: /var/log/teamsync-setup.log
+
+MOTD
+echo "ready: https://$APP_DOMAIN"

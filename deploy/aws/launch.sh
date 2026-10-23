@@ -1,20 +1,24 @@
 #!/usr/bin/env bash
-# Put the API side of TeamSync on one EC2 instance, with HTTPS.
+# Put the whole of TeamSync on one EC2 instance, with HTTPS.
 #
 #   aws login                 # you sign in; this script never handles credentials
 #   bash deploy/aws/launch.sh
 #
 # What it makes, all inside your account: an Elastic IP (so the hostname is stable),
 # a key pair saved to ~/.ssh, a security group open on 22, 80 and 443, and one
-# t3.micro instance that installs Docker and starts the stack on first boot.
+# t3.small instance that installs Docker and starts the stack on first boot.
+#
+# t3.small, not t3.micro: 1 GB is not enough to build the Next.js frontend, and
+# serving the frontend from the same box is what lets both hostnames share one
+# certificate issuer and removes the cross-origin step entirely.
 #
 # Hostnames come from nip.io, which resolves any name containing an IP back to that
 # IP — so TLS works with no domain to buy. Set DOMAIN_BASE to use your own instead.
 set -euo pipefail
 
-REGION="${REGION:-us-east-1}"
+REGION="${REGION:-ap-south-1}"
 NAME="${NAME:-teamsync}"
-INSTANCE_TYPE="${INSTANCE_TYPE:-t3.micro}"
+INSTANCE_TYPE="${INSTANCE_TYPE:-t3.small}"
 REPO_URL="${REPO_URL:-https://github.com/sanjaykumar-nb/TeamSync-AI.git}"
 ACME_EMAIL="${ACME_EMAIL:-admin@example.com}"
 KEY_PATH="${KEY_PATH:-$HOME/.ssh/$NAME-aws.pem}"
@@ -83,7 +87,7 @@ ami=$(aws ssm get-parameter --region "$REGION" \
   --query Parameter.Value --output text)
 instance=$(aws ec2 run-instances --region "$REGION" --image-id "$ami" \
   --instance-type "$INSTANCE_TYPE" --key-name "$NAME" --security-group-ids "$group" \
-  --block-device-mappings 'DeviceName=/dev/sda1,Ebs={VolumeSize=20,VolumeType=gp3}' \
+  --block-device-mappings 'DeviceName=/dev/sda1,Ebs={VolumeSize=30,VolumeType=gp3}' \
   --metadata-options 'HttpTokens=required' \
   --user-data "file://$user_data" \
   --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$NAME}]" \
@@ -98,23 +102,18 @@ aws ec2 associate-address --region "$REGION" --instance-id "$instance" \
 cat <<DONE
 
 Launched. The first boot installs Docker and builds the images, which takes
-about five minutes. Then:
+about ten minutes on this shape — the frontend build is most of it. Then:
 
+  app      https://$APP_DOMAIN
   API      https://$API_DOMAIN/health
   Log in   ssh -i $KEY_PATH ubuntu@$ip
-  Progress sudo tail -f /var/log/teamsync-setup.log
+  Progress ssh -i $KEY_PATH ubuntu@$ip 'sudo tail -f /var/log/teamsync-setup.log'
 
-Next, point the frontend at it (Netlify):
+Sign up in the app first: the first account owns the workspace.
 
-  cd frontend
-  NEXT_PUBLIC_API_URL=https://$API_DOMAIN netlify deploy --build --prod
+To load the real Apache Mesos sprint the demo uses:
 
-Then set CORS_ORIGINS on the instance to the Netlify address and restart the
-backend, so the browser is allowed to call the API:
-
-  ssh -i $KEY_PATH ubuntu@$ip
-  cd /opt/teamsync && sed -i "s|^DOMAIN=.*|DOMAIN=<your-netlify-host>|" .env
-  docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d backend
+  ssh -i $KEY_PATH ubuntu@$ip 'cd /opt/teamsync && docker compose -f docker-compose.yml -f docker-compose.prod.yml exec -T backend python -m app.scripts.import_real_sprint app/scripts/fixtures/mesos_sprint_74.json --at 0.5'
 
 To take it all down again: bash deploy/aws/destroy.sh
 DONE

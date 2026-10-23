@@ -4,7 +4,7 @@
 # releases it too.
 set -euo pipefail
 
-REGION="${REGION:-us-east-1}"
+REGION="${REGION:-ap-south-1}"
 NAME="${NAME:-teamsync}"
 
 instances=$(aws ec2 describe-instances --region "$REGION" \
