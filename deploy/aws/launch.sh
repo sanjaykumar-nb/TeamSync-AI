@@ -16,6 +16,13 @@
 # IP — so TLS works with no domain to buy. Set DOMAIN_BASE to use your own instead.
 set -euo pipefail
 
+# Git Bash rewrites anything shaped like a Unix path before the native aws.exe
+# sees it: /dev/sda1 becomes C:/Program Files/Git/dev/sda1, and an SSM parameter
+# name becomes a path that does not exist. Both are arguments, not files, so the
+# conversion is pure damage. These two variables are ignored off Windows.
+export MSYS_NO_PATHCONV=1
+export MSYS2_ARG_CONV_EXCL='*'
+
 REGION="${REGION:-ap-south-1}"
 NAME="${NAME:-teamsync}"
 INSTANCE_TYPE="${INSTANCE_TYPE:-t3.small}"
@@ -88,9 +95,9 @@ sed -e "s|__REPO_URL__|$REPO_URL|" \
     "$here/cloud-init.sh" > "$user_data"
 
 say "Launching $INSTANCE_TYPE (Ubuntu 24.04)"
-# Canonical publishes the image id as a public SSM parameter in most regions,
-# but not all of them - ap-south-1 answers ParameterNotFound. Fall back to
-# asking Canonical's own account (099720109477) for its newest 24.04 image.
+# Canonical publishes the image id as a public SSM parameter, which is the
+# cheapest way to ask. Not every region carries every path, so fall back to
+# Canonical's own account (099720109477) and its newest 24.04 image.
 ssm_path=/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id
 ami=$(aws ssm get-parameter --region "$REGION" --name "$ssm_path" \
   --query Parameter.Value --output text 2>/dev/null || true)
