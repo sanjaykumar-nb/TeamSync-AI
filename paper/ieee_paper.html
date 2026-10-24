@@ -12,7 +12,7 @@
   body {
     font-family: "Times New Roman", Times, serif;
     font-size: 10pt;
-    line-height: 1.09;
+    line-height: 1.07;
     margin: 0;
     color: #000;
     text-align: justify;
@@ -91,7 +91,7 @@
   }
   figure.wide { column-span: all; margin: 10pt 0 12pt 0; }
   figure img { width: 100%; display: block; }
-  figure.wide img { width: 92%; margin: 0 auto; }
+  figure.wide img { width: 86%; margin: 0 auto; }
   figcaption {
     font-size: 8pt;
     line-height: 1.2;
@@ -137,8 +137,8 @@
 
   /* ---- references ---- */
   ol.refs {
-    font-size: 8pt;
-    line-height: 1.17;
+    font-size: 7.7pt;
+    line-height: 1.12;
     list-style: none;
     padding-left: 0;
     margin: 2pt 0 0 0;
@@ -591,7 +591,7 @@ scale [37]. Prompt cost is reported in tokens, and latency as p50 and p95.</p>
 
 <h3>A. Prompt cost does not follow project size</h3>
 
-<p class="first">@@Table IIII@@ and Fig. 2 give the efficiency result, measured identically for
+<p class="first">Table III and Fig. 2 give the efficiency result, measured identically for
 both architectures. As the project grows from 13 to 2,003 tasks, a factor of 154, the graph-grounded prompt grows from 266 to 390 tokens, a factor of 1.47. Naive
 full-dataset prompting grows from 1,050 to 189,834 tokens. At the largest size the ratio is
 486.8&times;, a 99.8% reduction.</p>
@@ -606,7 +606,7 @@ is something a team runs nightly, which returns us to detecting risk after it ha
 happened.</p>
 
 <div class="tablewrap">
-  <p class="tcap">@@Table IIII@@<br><span class="n">Prompt tokens against project size</span></p>
+  <p class="tcap">Table III<br><span class="n">Prompt tokens against project size</span></p>
   <table>
     <thead>
       <tr><th class="n">Tasks</th><th class="n">Graph-grounded</th><th class="n">Naive</th><th class="n">Ratio</th></tr>
@@ -654,11 +654,11 @@ at a time when the answer can still change what they do. At each checkpoint the 
 reconstructed as it then stood, the share of scope still unfinished at the deadline is
 projected from work completed against time elapsed, and delay risk is raised using the same
 severity cut-offs the product uses everywhere else. Nothing was tuned for this experiment.
-@@Table IIV@@ reports the 270 held-out sprints from 22 unseen projects.</p>
+Table IV reports the 270 held-out sprints from 22 unseen projects.</p>
 
 
 <div class="tablewrap wide">
-  <p class="tcap">@@Table IIV@@<br><span class="n">Mid-sprint early warning, 270 held-out sprints from 22 unseen projects (48.9% positive)</span></p>
+  <p class="tcap">Table IV<br><span class="n">Mid-sprint early warning, 270 held-out sprints from 22 unseen projects (48.9% positive)</span></p>
   <table class="wide">
     <thead>
       <tr>
