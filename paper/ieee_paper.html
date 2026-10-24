@@ -29,10 +29,17 @@
     text-align: center;
     hyphens: none;
   }
-  .authors { font-size: 11pt; line-height: 1.3; }
-  .authors .name { font-size: 11pt; }
-  .authors .affil { font-size: 9.5pt; font-style: italic; }
-  .authors .mail { font-size: 9pt; font-family: "Courier New", monospace; }
+  .authors {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7pt 16pt;
+    margin-top: 2pt;
+    justify-items: center;
+  }
+  .author { line-height: 1.22; }
+  .author .name { font-size: 11pt; }
+  .author .affil { font-size: 9pt; font-style: italic; }
+  .author .mail { font-size: 8.5pt; font-family: "Courier New", monospace; }
 
   /* ---- two-column body ---- */
   .body {
@@ -152,10 +159,27 @@
 <div class="titleblock">
   <h1>Graph-Grounded Agent Prompting for Explainable<br>Coordination-Risk Detection in Software Projects</h1>
   <div class="authors">
-    <div class="name">Sanjaykumar N. B.</div>
-    <div class="affil">Department of Artificial Intelligence and Data Science</div>
-    <div class="affil">Saveetha Engineering College, Chennai, Tamil Nadu, India</div>
-    <div class="mail">sanjayynb@gmail.com</div>
+    <div class="author">
+      <div class="name">Hemadharsana S.</div>
+      <div class="affil">Department of Computer Science (Cyber Security)</div>
+      <div class="affil">Saveetha Engineering College, Chennai, India</div>
+    </div>
+    <div class="author">
+      <div class="name">Sanjaykumar N. B.</div>
+      <div class="affil">Department of Artificial Intelligence and Data Science</div>
+      <div class="affil">Saveetha Engineering College, Chennai, India</div>
+      <div class="mail">sanjayynb@gmail.com</div>
+    </div>
+    <div class="author">
+      <div class="name">Ratheesh Kumar B. R.</div>
+      <div class="affil">Department of Computer Science Engineering (Internet of Things)</div>
+      <div class="affil">Saveetha Engineering College, Chennai, India</div>
+    </div>
+    <div class="author">
+      <div class="name">Mohammad Afshan A.</div>
+      <div class="affil">Department of Computer Science Engineering (Cyber Security)</div>
+      <div class="affil">Saveetha Engineering College, Chennai, India</div>
+    </div>
   </div>
 </div>
 
@@ -163,8 +187,7 @@
 
 <p class="abstract"><em>Abstract</em>&mdash;Project-management tools report what a team has
 done; they rarely say what is about to go wrong, and when they do, the warning arrives
-without evidence a manager can check. The obvious remedy&mdash;hand the project to a large
-language model and ask what is at risk&mdash;costs tokens in proportion to project size,
+without evidence a manager can check. The obvious remedy is to hand the project to a large language model and ask what is at risk. That costs tokens in proportion to project size,
 returns a different answer each time, and justifies itself with references that may not
 exist. This paper reports a system built on the opposite arrangement. Project state is
 compiled into a typed knowledge graph, six categories of coordination risk are computed from
@@ -191,10 +214,9 @@ prediction, mining software repositories.</p>
 <p class="first">A sprint that finishes late rarely fails for a reason nobody could see. The
 dependency that blocked everything was in the issue tracker. The engineer carrying three
 times the team&rsquo;s median load was visible on the board. The component only one person had
-ever touched was a matter of record. What was missing was not data but a reading of it, early
-enough and specific enough to act on.</p>
+ever touched was a matter of record. The data was all there. What was missing was a reading of it, early enough and specific enough to act on.</p>
 
-<p>Commercial trackers&mdash;Jira, Linear, Asana&mdash;are built to record state, and they do
+<p>Commercial trackers such as Jira, Linear and Asana are built to record state, and they do
 it well. Where they offer risk signals at all, two properties limit their usefulness. The
 signal arrives after the fact, computed from a snapshot rather than projected forward; and it
 arrives without justification, so a manager can neither act on it with confidence nor argue
@@ -213,17 +235,14 @@ justification cannot be trusted: models cite issue keys and names that look exac
 ones and are not [1].</p>
 
 <p>This paper describes a system, TeamSync AI, built on the inversion of that arrangement.
-Risk is <em>computed</em>, not inferred. Project state&mdash;people, tasks, milestones,
-dependencies, comments&mdash;is compiled into a typed knowledge graph, and each of six risk
+Here the risk is <em>computed</em>. Nothing infers it. Project state (people, tasks, milestones, dependencies, comments) is compiled into a typed knowledge graph, and each of six risk
 categories is expressed as a property of that graph: the longest path through the dependency
 DAG, articulation points separating a person from a component, weighted degree over
 assignments, the ratio of commenting to assignment, and so on. These are ordinary graph
 computations [2], they take milliseconds, and they give the same answer twice.</p>
 
-<p>The language model is not removed; it is confined. Once a risk has been computed, a
-<em>witness subgraph</em> is extracted around the nodes responsible for it&mdash;one hop, at
-most eight neighbours per seed, at most sixty nodes&mdash;and that subgraph, and nothing
-else, is placed in the prompt. The model&rsquo;s task is to explain the finding in a sentence a
+<p>We keep the language model, but confine it. Once a risk has been computed, a
+<em>witness subgraph</em> is extracted around the nodes responsible for it: one hop, at most eight neighbours per seed, at most sixty nodes. That subgraph, and nothing else, goes into the prompt. The model&rsquo;s task is to explain the finding in a sentence a
 manager can read, citing node identifiers. Afterwards, every identifier it cited is looked up
 in the subgraph it was given, and anything that fails to resolve is deleted before the output
 is shown. The model never sees the project, never computes the score, and cannot invent an
@@ -244,8 +263,7 @@ measured.</p>
   language model is a bounded narrator, with one explicitly drawn interface between them
   (Sections IV&ndash;V);</li>
   <li>a witness-subgraph construction whose prompt cost is a function of the number of
-  anomalies rather than of project size&mdash;measured at 1.47&times; prompt growth across a
-  154&times; growth in project size, and a 487&times; reduction against full-dataset
+  anomalies rather than of project size. We measure 1.47&times; prompt growth across a 154&times; growth in project size, and a 487&times; reduction against full-dataset
   prompting at 2,003 tasks;</li>
   <li>post-hoc mechanical grounding of citations against a bounded identifier set, removing
   200 of 200 injected fabrications;</li>
@@ -277,29 +295,26 @@ MetaGPT [8] assigns standard-operating-procedure roles to agents producing softw
 artefacts; ChatDev [9] runs a simulated software company through conversational
 turn-taking; AutoGen [10] generalises the pattern into a conversation framework; ReAct [11]
 interleaves reasoning traces with tool actions; and AgentBench [12] and the surveys of Wang et
-al. [13] and He et al. [14] map the resulting design space, the latter specifically for software engineering. A 2026 experience report building such systems with current frameworks finds the basic components well covered and the operational ones&mdash;agent telemetry above all&mdash;still missing [15], which matches our own experience: the hardest part was not making agents talk but being able to tell, afterwards, which path produced a given output. These systems share an assumption worth naming:
+al. [13] and He et al. [14] map the resulting design space, the latter specifically for software engineering. A 2026 experience report building such systems with current frameworks finds the basic components well covered and the operational ones, agent telemetry above all, still missing [15], which matches our own experience: the hardest part was not making agents talk but being able to tell, afterwards, which path produced a given output. Closer to the task studied here, Kanagamalliga et al. [16] build an interpretable multi-agent architecture for automated legal risk assessment, splitting the judgement across specialised agents so the reasoning behind a verdict can be inspected. Ramshankar et al. [17] survey how such agentic systems adapt at run time. In both, the model stays inside the decision. We put it outside. These systems share an assumption worth naming:
 that the model is the component that <em>decides</em>, and that the engineering problem is
-arranging its decisions well. The present work takes the opposite position for the specific
-task of risk detection&mdash;the decision is a graph computation, and the model is kept out
-of it&mdash;so the comparison is architectural rather than a matter of better prompting.</p>
+arranging its decisions well. The present work takes the opposite position for the specific task of risk detection. The decision is a graph computation and the model is kept out of it, so the comparison is architectural rather than a matter of better prompting.</p>
 
 <h3>C. Explainability</h3>
 
-<p class="first">Post-hoc explanation methods such as LIME [16] and SHAP [17], surveyed broadly
-by Guidotti et al. [18] and Arrieta et al. [19], answer the question <em>why did this model
-predict that?</em>, and Jiarpakdee et al. [20] apply them specifically to defect-prediction models in software engineering; a 2026 study extends the same idea to explaining the risk of individual code changes [21]. They are the right tools when a learned model has made the
+<p class="first">Post-hoc explanation methods such as LIME [18] and SHAP [19], surveyed broadly
+by Guidotti et al. [20] and Arrieta et al. [21], answer the question <em>why did this model
+predict that?</em>, and Jiarpakdee et al. [22] apply them specifically to defect-prediction models in software engineering; a 2026 study extends the same idea to explaining the risk of individual code changes [23]. The same instinct recurs outside software engineering. Nalinipriya et al. [24] apply explainable models to spotting threats early in large networks, on the reasoning that a warning nobody can interpret is a warning nobody acts on. They are the right tools when a learned model has made the
 prediction. Here they are not applicable, and the reason is structural rather than a claim of
 superiority: a critical-path share or an articulation point has no hidden decision to
 reconstruct. The explanation is the computation. What remains to be explained is only the
-<em>prose</em>, and the risk there is fabrication rather than opacity&mdash;which is why the
-mechanism in Section V-E is a verifier and not an attribution method.</p>
+<em>prose</em>, and the risk there is fabrication rather than opacity. That is why the mechanism in Section V-E is a verifier and not an attribution method.</p>
 
 <h3>D. Grounding generated text</h3>
 
-<p class="first">Retrieval-augmented generation [22] conditions a model on retrieved passages
+<p class="first">Retrieval-augmented generation [25] conditions a model on retrieved passages
 so that its output has a documentary basis, and the surrounding literature on hallucination
-[1] establishes how often that basis is still embellished. Pan et al. [23] and Peng et al. [24] survey the
-broader union of language models and knowledge graphs, and the graph-structured retrieval built on it. That line of work has since had to confront the same failure mode from the other side: when the graph itself is imperfect, retrieval drifts and the generated text inherits the error [25]. The distinction here is one of
+[1] establishes how often that basis is still embellished. Pan et al. [26] and Peng et al. [27] survey the
+broader union of language models and knowledge graphs, and the graph-structured retrieval built on it. That line of work has since had to confront the same failure mode from the other side: when the graph itself is imperfect, retrieval drifts and the generated text inherits the error [28]. The distinction here is one of
 direction and of timing: retrieval conditions generation <em>beforehand</em> on text, while
 the present system verifies generation <em>afterwards</em> against a computed, typed
 structure whose legitimate identifiers form a closed set. Conditioning makes fabrication less
@@ -308,18 +323,14 @@ second is what this paper measures.</p>
 
 <h3>E. Where this work sits</h3>
 
-<p class="first">No comparator we are aware of combines all five of: specialist multi-agent
-decomposition; risk computed by graph algorithm rather than inferred by a model; mechanically
-enforced evidence grounding; a deterministic fallback emitting an identical schema; and a
-held-out real-world evaluation that reports its negative results.</p>
+<p class="first">Interpretable agent architectures [16], [17] and explainable early-warning models [24] have been pursued separately. Neither line represents the project itself as a typed graph whose dependency, ownership and communication edges become the evidence a verdict cites. That is the gap this paper addresses. No comparator we are aware of combines all five of: specialist multi-agent decomposition; risk computed by graph algorithm rather than inferred by a model; mechanically enforced evidence grounding; a deterministic fallback emitting an identical schema; and a held-out real-world evaluation that reports its negative results.</p>
 
 
 <h2>III.&ensp;What Is Claimed, and How It Is Tested</h2>
 
 <p class="first">The architecture in Section IV is not interesting by itself. Plenty of
 systems put a graph next to a language model. The argument of this paper is narrower and
-falsifiable: that <em>this particular division of labour</em>&mdash;compute the risk, then let
-the model do nothing but describe one already-computed finding&mdash;buys four properties the
+falsifiable: that <em>this particular division of labour</em>, computing the risk and then letting the model do nothing but describe one already-computed finding, buys four properties the
 ordinary arrangement cannot, and costs nothing measurable in return. This section states each
 property in the form in which it could be shown false, names the mechanism that produces it,
 and points at the measurement that tests it. Table I collects them.</p>
@@ -327,29 +338,23 @@ and points at the measurement that tests it. Table I collects them.</p>
 <h3>A. Risk is a graph invariant, not a model&rsquo;s opinion</h3>
 
 <p class="first">The usual pattern gives a language model the project and asks what is wrong.
-Here the question is never asked. Each of six coordination risks is defined as a property of a
-typed graph&mdash;the longest path through the dependency DAG, the articulation points
-separating a person from a component, weighted degree over assignments, the ratio of
-commenting to assignment&mdash;and computed by an ordinary graph algorithm with no fitted
-parameter. The model is handed the answer, not the question.</p>
+Here the question is never asked. Each of six coordination risks is defined as a property of a typed graph (the longest path through the dependency DAG, the articulation points separating a person from a component, weighted degree over assignments, the ratio of commenting to assignment) and computed by an ordinary graph algorithm with no fitted
+parameter. The model receives the answer. It never sees the question.</p>
 
 <p>This is the claim everything else rests on, and it is the one most easily falsified: if the
 computed verdict disagreed with what a careful reader of the same data would conclude, nothing
-downstream would matter. It is tested twice, from opposite directions&mdash;against synthetic
-scenarios whose ground truth holds by construction, and against 987 real sprints where the
+downstream would matter. It is tested twice, from opposite directions: against synthetic scenarios whose ground truth holds by construction, and against 987 real sprints where the
 outcome is known.</p>
 
 <h3>B. Prompt cost follows the number of anomalies, not the size of the project</h3>
 
 <p class="first">Because the model only ever sees a witness subgraph around one anomaly, and
-that subgraph is bounded by construction&mdash;one hop, at most eight neighbours per seed, at
-most sixty nodes&mdash;the prompt stops tracking the board. The falsifiable form is a growth
+that subgraph is bounded by construction (one hop, at most eight neighbours per seed, at most sixty nodes), the prompt stops tracking the board. The falsifiable form is a growth
 rate: if prompt size grew with project size, the claim fails. It does not. Across a project
 grown 154&times;, the prompt grows 1.47&times;.</p>
 
 <p>The bound is less obvious than it looks, and we had it wrong at first. Capping the hop
-count alone is not enough, because one high-degree node&mdash;a release milestone touching four
-hundred tasks&mdash;drags the project back into the prompt through a single hop. The
+count alone is not enough, because one high-degree node, say a release milestone touching four hundred tasks, drags the project back into the prompt through a single hop. The
 per-seed cap is what makes the bound hold, and Section V-C reports the measurement that
 exposed it.</p>
 
@@ -358,14 +363,13 @@ exposed it.</p>
 <p class="first">Grounding a model in retrieved text makes invention less likely; it does not
 make it checkable. Recent measurements are blunt about the residual: across frontier deep
 research agents, link validity stays above 94% while factual accuracy of the attributions
-falls between 39% and 77% [26], and the tools built to catch bad citations are themselves
-limited by metadata and coverage gaps [27].</p>
+falls between 39% and 77% [29], and the tools built to catch bad citations are themselves
+limited by metadata and coverage gaps [30].</p>
 
 <p>The mechanism here sidesteps that problem rather than improving on it. Because the model is
 shown a bounded subgraph, the set of identifiers it is <em>entitled</em> to cite is finite and
 known before generation. Checking a citation is therefore a membership test against a closed
-set, not a judgement about plausibility&mdash;which is why the result can be stated as a
-guarantee instead of a rate. The falsifiable form: inject fabricated references and see
+set, not a judgement about plausibility. That is why the result can be stated as a guarantee instead of a rate. The falsifiable form: inject fabricated references and see
 whether any survives.</p>
 
 <h3>D. The inversion costs nothing in detection quality</h3>
@@ -380,9 +384,7 @@ reporting once.</p>
 <h3>E. A reported failure: added complexity did not survive unseen projects</h3>
 
 <p class="first">The fifth finding is not a claim in our favour and is reported because it
-bears directly on the four above. Three attempts to improve on the zero-parameter rule&mdash;a
-threshold sweep, individualised due dates, and a tuned logistic model&mdash;failed, and the
-third failed in the most instructive way: cross-validated F1 0.816 collapsed to 0.593 on
+bears directly on the four above. Three attempts to improve on the zero-parameter rule all failed: a threshold sweep, individualised due dates, and a tuned logistic model. The third failed in the most instructive way. cross-validated F1 0.816 collapsed to 0.593 on
 projects the model had not seen, where the rule with nothing to fit scored 0.712. A paired
 test cannot separate the two. We do not claim the rule predicts better. We claim the tuned
 advantage did not cross a project boundary, and that when two predictors cannot be separated,
@@ -428,7 +430,7 @@ Section VII can replay 987 historical sprints through exactly the code path the 
 
 <figure class="wide">
   <img src="figures/fig1_architecture_blocks.svg" alt="System architecture block diagram">
-  <figcaption><span class="lbl">Fig. 1.</span>&ensp;System architecture. Blocks are deployed subsystems; lines are interfaces between them; nothing here is a decision or a step in time. The analysis tier is drawn as three bands because that is where the claims of Section III live. Band 1 computes every number the product reports, with no model call and no fitted parameter. Band 2 runs the specialists and aggregates them, emitting one schema whichever path produced it. Band 3 is the only place a language model may be called, and the heavy connector marks the only artefact that reaches it: one finding and its witness subgraph. The risk scores travel to the application tier without entering band 3 at all (dashed), so a model that is absent, rate-limited or switched off changes the prose and not the numbers &mdash; which is the configuration under which every result in Section VIII was measured.</figcaption>
+  <figcaption><span class="lbl">Fig. 1.</span>&ensp;System architecture. Blocks are deployed subsystems; lines are interfaces between them; nothing here is a decision or a step in time. The analysis tier is drawn as three bands because that is where the claims of Section III live. Band 1 computes every number the product reports, with no model call and no fitted parameter. Band 2 runs the specialists and aggregates them, emitting one schema whichever path produced it. Band 3 is the only place a language model may be called, and the heavy connector marks the only artefact that reaches it: one finding and its witness subgraph. The risk scores travel to the application tier without entering band 3 at all (dashed), so a model that is absent, rate-limited or switched off changes the prose and not the numbers. That is the configuration under which every result in Section VIII was measured.</figcaption>
 </figure>
 
 
@@ -436,10 +438,7 @@ Section VII can replay 987 historical sprints through exactly the code path the 
 
 <h3>A. The project graph</h3>
 
-<p class="first">A project snapshot is compiled into a directed multigraph over five node
-types&mdash;<span class="mono">Person</span>, <span class="mono">Task</span>,
-<span class="mono">Milestone</span>, <span class="mono">Project</span> and
-<span class="mono">Component</span>&mdash;connected by nine edge types. Assignment edges
+<p class="first">A project snapshot is compiled into a directed multigraph over five node types (<span class="mono">Person</span>, <span class="mono">Task</span>, <span class="mono">Milestone</span>, <span class="mono">Project</span> and <span class="mono">Component</span>) connected by nine edge types. Assignment edges
 carry story points; dependency edges come from issue links; commenting edges come from the
 comment table; and one derived edge, <span class="mono">Person&nbsp;KNOWS&nbsp;Component</span>,
 is the composition of assignment with component membership, which is what makes
@@ -454,7 +453,7 @@ a risk analysis that requires its own data collection does not get run.</p>
 <h3>B. Risk as a graph property</h3>
 
 <p class="first">Each of six risk categories is a question about the graph, with a documented
-threshold (Table II). None of them involves a model, and none of them involves a fitted parameter. Nor is any graph <em>learning</em> involved: these are classical invariants computed on the graph, not the learned node representations of a graph neural network [28], which is what makes the verdict reproducible and its explanation the computation itself. Building the graph also produced a correctness result that was not sought: the
+threshold (Table II). None of them involves a model, and none of them involves a fitted parameter. Nor is any graph <em>learning</em> involved: these are classical invariants computed on the graph, not the learned node representations of a graph neural network [31], which is what makes the verdict reproducible and its explanation the computation itself. Building the graph also produced a correctness result that was not sought: the
 pre-existing API rejected a task that depended on itself but accepted a three-hop cycle
 A&nbsp;&rarr;&nbsp;B&nbsp;&rarr;&nbsp;C&nbsp;&rarr;&nbsp;A, because it only checked for direct
 self-loops. Once the graph exists, genuine cycle detection is a library call.</p>
@@ -467,10 +466,10 @@ self-loops. Once the graph exists, genuine cycle detection is a library call.</p
     </thead>
     <tbody>
       <tr><td>Dependency</td><td>Longest path through the <span class="mono">BLOCKS</span> DAG</td><td class="c">&ge;&nbsp;0.25</td></tr>
-      <tr><td>Concentration</td><td>Betweenness centrality [29]</td><td class="c">&mdash;</td></tr>
+      <tr><td>Concentration</td><td>Betweenness centrality [32]</td><td class="c">&mdash;</td></tr>
       <tr><td>Knowledge</td><td>Articulation points, Person&ndash;Component</td><td class="c">&ge;&nbsp;2 tasks</td></tr>
       <tr><td>Workload</td><td>Weighted degree over assignments</td><td class="c">&ge;&nbsp;1.50</td></tr>
-      <tr><td>Coordination</td><td>Community structure [30], isolated members</td><td class="c">&mdash;</td></tr>
+      <tr><td>Coordination</td><td>Community structure [33], isolated members</td><td class="c">&mdash;</td></tr>
       <tr><td>Silent member</td><td>Comment degree &divide; assignment degree</td><td class="c">&ge;&nbsp;0.30</td></tr>
       <tr><td>Delay</td><td>Open tasks past due date</td><td class="c">&ge;&nbsp;0.10</td></tr>
     </tbody>
@@ -485,10 +484,7 @@ it: one hop; at most eight neighbours per seed; at most sixty nodes in total, wi
 guaranteed to survive truncation.</p>
 
 <p>The middle parameter is the one that matters, and we only learned that by getting it
-wrong. An earlier implementation expanded every neighbour of every seed. Because real project
-graphs have hubs&mdash;a release milestone touching four hundred tasks, a tech lead assigned
-to a third of the board&mdash;a single high-degree seed dragged a large fraction of the
-project back into the prompt, and measured prompt growth was 4.31&times; across the size
+wrong. An earlier implementation expanded every neighbour of every seed. Real project graphs have hubs: a release milestone touching four hundred tasks, a tech lead assigned to a third of the board. One high-degree seed dragged a large fraction of the project back into the prompt, and measured prompt growth was 4.31&times; across the size
 sweep. Capping neighbours per seed brought it to 1.007&times;. The bound on prompt size is
 not a property of taking one hop; it is a property of refusing to follow a hub.</p>
 
@@ -510,9 +506,8 @@ to confirm the model is narrating rather than quietly re-deciding.</p>
 
 <p class="first">After generation, each cited identifier is resolved against the identifiers
 present in the witness. Unresolvable citations are dropped, and if dropping them empties the
-evidence list the finding is still shown&mdash;with its computed score and no narration&mdash;rather
-than being suppressed. This is a closed-set membership test, not a plausibility judgement, which is the whole
-reason it can be stated as a guarantee rather than a tendency &mdash; and it is worth noting that the alternative, checking citations after the fact against the open world, is measurably hard: current detection tools are limited by reference extraction, metadata gaps and inconsistent verification [27].</p>
+evidence list the finding is still shown, with its computed score and no narration, rather than being suppressed. This is a closed-set membership test, not a plausibility judgement, which is the whole
+reason it can be stated as a guarantee rather than a tendency. The alternative, checking citations after the fact against the open world, is measurably hard: current detection tools are limited by reference extraction, metadata gaps and inconsistent verification [30].</p>
 
 <p>One implementation detail is worth recording because it was a silent failure for some
 time. The verifier treated an empty list of legitimate identifiers as <em>no filter
@@ -523,10 +518,7 @@ test.</p>
 
 <h2>VI.&ensp;Multi-Agent Design</h2>
 
-<p class="first">Five agents are active. A coordinator assembles the snapshot and runs
-three specialists concurrently&mdash;Planning, which reads milestones and capacity; Progress,
-which reads velocity and stalled work; and Workload, which reads assignments and
-single-point-of-failure structure. A risk aggregator consumes the six computed scores, and a
+<p class="first">Five agents are active. A coordinator assembles the snapshot and runs three specialists concurrently. Planning reads milestones and capacity. Progress reads velocity and stalled work. Workload reads assignments and single-point-of-failure structure. A risk aggregator consumes the six computed scores, and a
 recommendation agent turns the aggregate into prioritised actions. Two further agents,
 covering meeting transcripts and chat traffic, are specified but not implemented, for the
 plain reason that the product has no such data source; they are listed here because omitting
@@ -536,15 +528,14 @@ them from a system diagram would overstate what was built.</p>
 summary, a severity level, a confidence, weighted signals, evidence items, recommendations,
 and a metadata field that records which path produced it. The uniformity is what makes the
 fallback honest. A caller cannot tell from the schema whether a model was involved, so no
-downstream code is written to depend on one, and the deterministic path is not a degraded
-mode bolted on afterwards&mdash;it is the reference implementation, and the configuration in
+downstream code is written to depend on one, and the deterministic path is not a degraded mode bolted on afterwards. It is the reference implementation, and the configuration in
 which this paper&rsquo;s results were produced.</p>
 
 <h2>VII.&ensp;Experimental Setup</h2>
 
 <h3>A. Dataset</h3>
 
-<p class="first">Real-world evaluation uses TAWOS [31], a published collection of agile
+<p class="first">Real-world evaluation uses TAWOS [34], a published collection of agile
 open-source projects drawn from twelve public Jira installations. We parsed the full dump
 with no parse errors and reconciled the row counts against the published totals:
 39&nbsp;projects, 206,162&nbsp;users, 4,594&nbsp;sprints, 458,232&nbsp;issues,
@@ -567,8 +558,7 @@ for the mid-sprint evaluation it is the 50% and 75% points of the sprint&rsquo;s
 
 <p>An early version of this harness set the due date equal to the evaluation time, so the
 condition <span class="mono">due&nbsp;&lt;&nbsp;now</span> was never true and recall was 0.0
-on the first run. The bug is mentioned because its symptom&mdash;a detector that fires on
-nothing&mdash;is much easier to notice than the opposite, and the opposite is what a leaking
+on the first run. The bug is mentioned because its symptom, a detector that fires on nothing, is much easier to notice than the opposite, and the opposite is what a leaking
 harness produces.</p>
 
 <h3>C. Splitting</h3>
@@ -583,8 +573,7 @@ the held-out projects were touched.</p>
 <h3>D. Synthetic scenarios</h3>
 
 <p class="first">Real data exercises one of the six risk categories. To check the
-implementation of the other five, 180 scenarios&mdash;90 positive and 90 negative, 30 per
-category&mdash;are generated with a deterministically injected anomaly, so ground truth holds
+implementation of the other five, 180 scenarios (90 positive and 90 negative, 30 per category) are generated with a deterministically injected anomaly, so ground truth holds
 by construction. These support correctness checking, a boundary sweep and the ablation, and
 Section VIII-B states plainly what they do and do not demonstrate.</p>
 
@@ -594,17 +583,16 @@ Section VIII-B states plainly what they do and do not demonstrate.</p>
 included but de-emphasised given the class balance; AUC-ROC for threshold-independent
 ranking; and the Brier score for calibration. Paired comparisons use exact McNemar tests on
 the same sprints, and interval estimates use a cluster bootstrap that resamples
-<em>projects</em> with replacement over 2,000 replicates [32], matching the unit of the split.
-Model&ndash;rule agreement is Cohen&rsquo;s <em>&kappa;</em> [33], read on the Landis&ndash;Koch
-scale [34]. Prompt cost is reported in tokens, and latency as p50 and p95.</p>
+<em>projects</em> with replacement over 2,000 replicates [35], matching the unit of the split.
+Model&ndash;rule agreement is Cohen&rsquo;s <em>&kappa;</em> [36], read on the Landis&ndash;Koch
+scale [37]. Prompt cost is reported in tokens, and latency as p50 and p95.</p>
 
 <h2>VIII.&ensp;Results</h2>
 
 <h3>A. Prompt cost does not follow project size</h3>
 
 <p class="first">@@Table IIII@@ and Fig. 2 give the efficiency result, measured identically for
-both architectures. As the project grows from 13 to 2,003 tasks&mdash;a factor of
-154&mdash;the graph-grounded prompt grows from 266 to 390 tokens, a factor of 1.47. Naive
+both architectures. As the project grows from 13 to 2,003 tasks, a factor of 154, the graph-grounded prompt grows from 266 to 390 tokens, a factor of 1.47. Naive
 full-dataset prompting grows from 1,050 to 189,834 tokens. At the largest size the ratio is
 486.8&times;, a 99.8% reduction.</p>
 
@@ -656,8 +644,7 @@ documented 1.50, which is the resolution the sweep can establish.</p>
 deliberately, 200 of 200 were removed, leaving no unresolvable citation in any output. The
 guarantee is narrow and should be stated narrowly: every surviving citation names a node that
 exists in the witness the model was shown. It does not follow that the surviving citation is
-the <em>most relevant</em> node, and nothing here measures whether the resulting explanation
-helps a manager&mdash;see Section X.</p>
+the <em>most relevant</em> node, and nothing here measures whether the resulting explanation helps a manager. See Section X.</p>
 
 
 <h3>D. Mid-sprint early warning on unseen projects</h3>
@@ -738,16 +725,14 @@ logistic model reaches 0.593. The cluster bootstrap puts the rule&rsquo;s F1 int
 <p>Two cautions belong with these numbers. The recall of 1.000 is <em>structural</em>: after
 the deadline, a delayed sprint is by definition one with unfinished work past its due date,
 which is exactly the condition the rule tests. It is a property of evaluating after the fact,
-not a skill, and its bootstrap interval of [1.000, 1.000] is correct precisely because the
-quantity has no variance&mdash;not one of the 22 held-out projects produces a false negative.
+not a skill, and its bootstrap interval of [1.000, 1.000] is correct precisely because the quantity has no variance. Not one of the 22 held-out projects produces a false negative.
 The mid-sprint evaluation in Section VIII-D, where the outcome is not yet determined, is where
 recall means something.</p>
 
 <p>The second caution concerns what may be concluded about the learned model. The rule&rsquo;s F1
 exceeds the composite&rsquo;s point estimate, but a paired test cannot separate them: exact McNemar
 gives <em>p</em> = 0.78, and the bootstrap difference is +0.119 with a 95% interval of
-[&minus;0.025, +0.291] spanning zero. Against flagging every sprint, by contrast, the
-difference is +0.055, [+0.030, +0.080], <em>p</em> &lt; 0.001&mdash;a real effect. The
+[&minus;0.025, +0.291] spanning zero. Against flagging every sprint, by contrast, the difference is +0.055, [+0.030, +0.080], <em>p</em> &lt; 0.001, a real effect. The
 defensible claim is therefore not that the rule predicts better than the learned model. It is
 that the learned model&rsquo;s tuned advantage did not survive the move to unseen projects, and
 that the simpler object is the one that arrives with its evidence attached.</p>
@@ -762,20 +747,16 @@ that the simpler object is the one that arrives with its evidence attached.</p>
 
 <h3>F. Three attempts that failed</h3>
 
-<p class="first">Reporting these is not modesty; they are the evidence that the simple rule is
-not leaving accuracy unclaimed.</p>
+<p class="first">We report these because they are the evidence that the simple rule leaves no accuracy unclaimed.</p>
 
 <p><h4>1) The threshold sweep was inert.</h4> Sweeping the overdue threshold from 0.05 to 0.50
 produced byte-identical output at every value. The reason is structural: with a single shared
 sprint-end deadline, the overdue ratio is always exactly 0.0 or 1.0, so no threshold strictly
-between them can reclassify anything. A sweep that cannot change its output is not a weak
-result, it is a misconceived experiment, and it was discarded as such.</p>
+between them can reclassify anything. A sweep that cannot change its output tests nothing. We discarded it.</p>
 
 <p><h4>2) Individualised due dates made ranking worse.</h4> Deriving per-issue deadlines from
 observed cycle time (2.96 days per story point) did un-collapse the signal, moving the median
-overdue ratio to 0.76, but AUC fell from 0.581 to 0.531. Story points are too noisy a duration
-proxy to carry per-issue deadlines&mdash;a finding consistent with the replication literature
-on story-point estimation [6].</p>
+overdue ratio to 0.76, but AUC fell from 0.581 to 0.531. Story points are too noisy a duration proxy to carry per-issue deadlines, a finding consistent with the replication literature on story-point estimation [6].</p>
 
 <p><h4>3) The learned model overfitted across project boundaries.</h4> A four-feature logistic
 model with three-fold group cross-validation by project reached CV F1 0.816 and AUC 0.887, and
@@ -789,18 +770,16 @@ structure, and it is the reason this paper leads with a rule that has nothing to
 
 <p class="first">The ablation scores both architectures on identical scenarios against
 identical ground truth (36 scenarios, 18 positive, no failed calls). The graph-grounded path
-scores F1 1.000; naive full-dataset prompting scores 0.947. The per-category results are identical on five of the six&mdash;dependency, knowledge, workload, delay and silent member all score 1.000 under both architectures&mdash;so the entire difference is coordination risk, where the naive path reaches F1 0.75 at precision 0.60. Coordination is the category that depends on the shape of the collaboration graph rather than on any single task&rsquo;s attributes, which is the one place a reader of the serialised board has to infer what the graph states outright.</p>
+scores F1 1.000; naive full-dataset prompting scores 0.947. The per-category results are identical on five of the six. Dependency, knowledge, workload, delay and silent member all score 1.000 under both architectures, so the entire difference is coordination risk, where the naive path reaches F1 0.75 at precision 0.60. Coordination is the category that depends on the shape of the collaboration graph rather than on any single task&rsquo;s attributes, which is the one place a reader of the serialised board has to infer what the graph states outright.</p>
 
 <p>The comparison is deliberately tilted toward the naive baseline: tiny projects where full
 context is cheap and fits comfortably, a good-faith prompt defining all six categories, and
-lenient response parsing. Three qualifications still apply. The naive baseline is not
-bad&mdash;F1 0.947 is a respectable score, and it over-reports only modestly, naming 2.75 risk
+lenient response parsing. Three qualifications still apply. The naive baseline is not bad. F1 0.947 is a respectable score, and it over-reports only modestly, naming 2.75 risk
 categories per scenario against the graph&rsquo;s 2.42, with 12.1% of its claims uncorroborated.
 Scoring is per-target-category, so risks it reports on other dimensions are not counted
 against it; stricter scoring would likely widen the gap, and we do not claim it. And nothing
 here says anything about naive accuracy <em>at scale</em>, which is untested and, at 190,000
-tokens per scenario, largely untestable on an ordinary budget&mdash;which is itself part of
-the argument. The mean prompts in this ablation were 1,109 tokens against 1,804, a ratio of
+tokens per scenario, largely untestable on an ordinary budget. That limit is itself part of the argument. The mean prompts in this ablation were 1,109 tokens against 1,804, a ratio of
 1.6&times;; the 487&times; figure belongs to Section VIII-A and the two should not be
 conflated.</p>
 
@@ -811,15 +790,13 @@ conflated.</p>
 <p class="first">The grounding guarantee would be hollow if the model were silently
 overriding the computed verdict. To test that, 90 live calls were made across all six
 categories, and the narrated severity was compared with the deterministic verdict on
-identical input. Cohen&rsquo;s <em>&kappa;</em> = 0.9533 over the 37 schema-valid responses&mdash;almost
-perfect agreement on the Landis&ndash;Koch scale [34]&mdash;with per-category agreement of
+identical input. Cohen&rsquo;s <em>&kappa;</em> = 0.9533 over the 37 schema-valid responses, almost perfect agreement on the Landis&ndash;Koch scale [37], with per-category agreement of
 1.00 for dependency (<em>n</em> = 14) and workload (<em>n</em> = 8), and 0.86 for knowledge
 (<em>n</em> = 12).</p>
 
 <p>Schema validity needs two numbers rather than one, and we report both. Over all 90
 attempted calls, 41.1% returned a valid structure. Of the 24 individually diagnosed failures,
-22 were HTTP 429 rate limits from a free-tier key&mdash;an infrastructure property, not a
-model property. Because the run logged only those 24 failures individually, validity over
+22 were HTTP 429 rate limits from a free-tier key. That is a property of the infrastructure, not of the model. Because the run logged only those 24 failures individually, validity over
 calls that actually reached the model cannot be computed, only bounded: between 54% and 95%.
 We quote 41.1% as the measured end-to-end rate and the range as a range. The commonly
 convenient figure of roughly 92% assumes the optimistic extreme, and this run has no per-call
@@ -827,10 +804,7 @@ record that would support it.</p>
 
 <h3>I. Engineering baseline</h3>
 
-<p class="first">The implementation is roughly 21,000 lines. Its test suites&mdash;109
-backend tests on both SQLite and PostgreSQL&nbsp;16, including a 185-check role-by-endpoint
-matrix; 85 analysis-service tests; 63 frontend tests&mdash;run on every push alongside a
-replay of the demonstration that re-checks every number the demonstration script quotes.
+<p class="first">The implementation is roughly 21,000 lines. Three suites run on every push: 109 backend tests against both SQLite and PostgreSQL&nbsp;16, among them a 185-check role-by-endpoint matrix; 85 analysis-service tests; and 63 frontend tests. A replay of the demonstration runs beside them, re-checking every number the demonstration script quotes.
 Every figure is regenerated from committed result files, so a figure cannot drift away from
 the evaluation that produced it.</p>
 
@@ -858,8 +832,7 @@ when a false alarm is cheap to dismiss and a miss is expensive, which is the usu
 sprint risk but is not universal. A team drowning in alerts will ignore all of them, and no
 confidence interval in this paper addresses that.</p>
 
-<p>Finally, a system that scores people&mdash;identifying the overloaded engineer, the silent
-team member, the single point of failure&mdash;can be used against them. The design choices
+<p>Finally, a system that scores people can be used against them. It names the overloaded engineer, the silent team member, the single point of failure. The design choices
 here reduce but do not eliminate the risk: the output is an explanation with its evidence
 rather than a bare score, which at least makes a claim about a person contestable by the
 person. We would not deploy this as an input to performance review, and we think a paper
@@ -878,8 +851,7 @@ dataset, whose status vocabulary has no blocked state. At the 25% checkpoint the
 fraction falls below the projection&rsquo;s minimum and the signal is deliberately switched off, so
 nothing is claimed about the first quarter of a sprint.</p>
 
-<p><em>External.</em> Only one of the six risk categories&mdash;delay&mdash;is validated on
-real data. Single-point-of-failure, cycle and coordination signals are almost entirely absent
+<p><em>External.</em> Only one of the six risk categories, delay, is validated on real data. Single-point-of-failure, cycle and coordination signals are almost entirely absent
 from sprint reconstruction, because issue links in TAWOS span a project&rsquo;s whole history rather
 than one sprint; those five categories are validated synthetically, which tests implementation
 rather than generalisation. All data is open-source Jira, and company projects may differ.</p>
@@ -904,9 +876,7 @@ unseen projects the same graph warns at the halfway mark with AUC 0.792, rising 
 three-quarters.</p>
 
 <p>It also reports where the approach does not win. The projection ranks no better than
-counting unfinished work, and a tuned learned model cannot be statistically separated from a
-rule with no parameters&mdash;after that model&rsquo;s cross-validated F1 of 0.816 collapsed to
-0.593 on projects it had not seen.</p>
+counting unfinished work, and a tuned learned model cannot be statistically separated from a rule with no parameters, after that model&rsquo;s cross-validated F1 of 0.816 collapsed to 0.593 on projects it had not seen.</p>
 
 <p>Three pieces of future work follow directly from the threats above, in order of how much
 they would change the conclusions: a human study of whether the grounded explanations change
@@ -917,8 +887,9 @@ key with per-call error logging, which would turn the 54&ndash;95% bound into a 
 
 <h2>Acknowledgment</h2>
 
-<p class="first">The author thanks the maintainers of the TAWOS dataset for releasing it
-under terms that permit this kind of secondary analysis.</p>
+<p class="first">The authors thank Saveetha Engineering College, Chennai, for the computing facilities and the departmental support that made this work possible, and the maintainers of the TAWOS dataset for releasing it under terms that permit secondary analysis of this kind.</p>
+
+<p>During the preparation of this manuscript the authors used a large language model to draft and edit portions of the text. All results, figures and analyses are the authors&rsquo; own. The authors reviewed and edited the output, and take full responsibility for the content of this publication.</p>
 
 <h2>References</h2>
 
@@ -938,12 +909,15 @@ under terms that permit this kind of secondary analysis.</p>
 <li>L. Wang <em>et al.</em>, &ldquo;A survey on large language model based autonomous agents,&rdquo; <em>Front. Comput. Sci.</em>, vol. 18, no. 6, art. 186345, 2024, doi: 10.1007/s11704-024-40231-1.</li>
 <li>J. He, C. Treude, and D. Lo, &ldquo;LLM-based multi-agent systems for software engineering: Literature review, vision and the road ahead,&rdquo; <em>ACM Trans. Softw. Eng. Methodol.</em>, vol. 34, no. 5, pp. 1&ndash;30, 2025, doi: 10.1145/3712003.</li>
 <li>M. C. S. De Oliveira, M. O. Ibiyo, M. Gianrusso, C. Di Sipio, D. Di Ruscio, and P. T. Nguyen, &ldquo;Developing LLM-based multi-agent systems in software engineering: A mixed-method experience report,&rdquo; 2026, arXiv:2608.11965.</li>
+<li>S. Kanagamalliga, P. Vinayagam, R. Rehan Naveid, and B. Dhanu Dharvin, &ldquo;An interpretable multi agent architecture for automated legal risk assessment,&rdquo; in <em>Proc. 7th Int. Conf. Innovative Data Communication Technologies and Application (ICIDCA)</em>, 2025, pp. 1449&ndash;1454, doi: 10.1109/ICIDCA66325.2025.11280370.</li>
+<li>N. Ramshankar <em>et al.</em>, &ldquo;Key methods of adaptation in agentic AI system,&rdquo; in <em>Agentic Artificial Intelligence</em>. Berlin, Germany: De Gruyter, 2026, ch. 10, doi: 10.1515/9783112223062-010.</li>
 <li>M. T. Ribeiro, S. Singh, and C. Guestrin, &ldquo;&lsquo;Why should I trust you?&rsquo;: Explaining the predictions of any classifier,&rdquo; in <em>Proc. 22nd ACM SIGKDD Int. Conf. Knowledge Discovery and Data Mining (KDD)</em>, 2016, pp. 1135&ndash;1144.</li>
 <li>S. M. Lundberg and S.-I. Lee, &ldquo;A unified approach to interpreting model predictions,&rdquo; in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 30, 2017, pp. 4765&ndash;4774.</li>
 <li>R. Guidotti, A. Monreale, S. Ruggieri, F. Turini, F. Giannotti, and D. Pedreschi, &ldquo;A survey of methods for explaining black box models,&rdquo; <em>ACM Comput. Surv.</em>, vol. 51, no. 5, pp. 1&ndash;42, 2018.</li>
 <li>A. B. Arrieta <em>et al.</em>, &ldquo;Explainable artificial intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI,&rdquo; <em>Inf. Fusion</em>, vol. 58, pp. 82&ndash;115, 2020.</li>
 <li>J. Jiarpakdee, C. Tantithamthavorn, H. K. Dam, and J. Grundy, &ldquo;An empirical study of model-agnostic techniques for defect prediction models,&rdquo; <em>IEEE Trans. Softw. Eng.</em>, vol. 48, no. 1, pp. 166&ndash;185, 2022.</li>
 <li>Y. Liu <em>et al.</em>, &ldquo;A preliminary study on explaining risk of code changes using LLM-based prediction models,&rdquo; 2026, arXiv:2607.02782.</li>
+<li>G. Nalinipriya, S. Rama Sree, K. Radhika, E. Laxmi Lydia, F. K. Karim, M. K. Ishak, and S. M. Mostafa, &ldquo;Leveraging explainable artificial intelligence for early detection and mitigation of cyber threat in large-scale network environments,&rdquo; <em>Scientific Reports</em>, vol. 15, art. 24662, 2025, doi: 10.1038/s41598-025-08597-9.</li>
 <li>P. Lewis <em>et al.</em>, &ldquo;Retrieval-augmented generation for knowledge-intensive NLP tasks,&rdquo; in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 33, 2020, pp. 9459&ndash;9474.</li>
 <li>S. Pan, L. Luo, Y. Wang, C. Chen, J. Wang, and X. Wu, &ldquo;Unifying large language models and knowledge graphs: A roadmap,&rdquo; <em>IEEE Trans. Knowl. Data Eng.</em>, vol. 36, no. 7, pp. 3580&ndash;3599, 2024.</li>
 <li>B. Peng, Y. Zhu, Y. Liu, X. Bo, H. Shi, C. Hong, Y. Zhang, and S. Tang, &ldquo;Graph retrieval-augmented generation: A survey,&rdquo; <em>ACM Trans. Inf. Syst.</em>, 2025, doi: 10.1145/3777378.</li>

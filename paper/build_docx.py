@@ -313,20 +313,39 @@ def main() -> None:
     par.alignment = WD_ALIGN_PARAGRAPH.CENTER
     tight(par, after=10, lead=Pt(23))
     add_runs(par, h1, size=Pt(20))
-    for sel, size, italic, mono in (
-        ("name", Pt(11), False, False),
-        ("affil", Pt(9.5), True, False),
-        ("mail", Pt(9), False, True),
-    ):
-        for node in tb.find_all("div", class_=sel):
-            p = doc.add_paragraph()
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            tight(p, after=1, lead=Pt(12))
-            run = p.add_run(node.get_text().strip())
-            run.font.name = MONO if mono else SERIF
-            run.font.size = size
-            run.italic = italic
-    doc.paragraphs[-1].paragraph_format.space_after = Pt(12)
+    # Four authors go in a borderless 2x2 table, which is how the IEEE Word
+    # template lays out more than two. Rendering by CSS class instead would
+    # group all the names together and then all the affiliations.
+    authors = tb.find_all("div", class_="author")
+    cols = 2 if len(authors) > 1 else 1
+    rows = (len(authors) + cols - 1) // cols
+    at = doc.add_table(rows=rows, cols=cols)
+    at.alignment = WD_TABLE_ALIGNMENT.CENTER
+    at.autofit = False
+    no_table_borders(at)
+    set_cell_margins(at, left=0, right=0, top=0, bottom=0)
+    cw = Inches(TEXT_WIDTH / cols)
+    for col in at.columns:
+        col.width = cw
+    for idx, block_el in enumerate(authors):
+        cell = at.rows[idx // cols].cells[idx % cols]
+        cell.width = cw
+        first = True
+        for node in block_el.find_all("div"):
+            klass = (node.get("class") or ["affil"])[0]
+            par = cell.paragraphs[0] if first else cell.add_paragraph()
+            first = False
+            par.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            tight(par, after=0, lead=Pt(12))
+            run = par.add_run(node.get_text().strip())
+            run.font.name = MONO if klass == "mail" else SERIF
+            run.font.size = {"name": Pt(11), "affil": Pt(9), "mail": Pt(8.5)}[klass]
+            run.italic = (klass == "affil")
+        if idx // cols < rows - 1:
+            spacer = cell.add_paragraph()
+            tight(spacer, after=0, lead=Pt(8))
+    gap = doc.add_paragraph()
+    tight(gap, after=0, lead=Pt(10))
 
     # --- body, two columns from here
     sec = doc.add_section(WD_SECTION.CONTINUOUS)
