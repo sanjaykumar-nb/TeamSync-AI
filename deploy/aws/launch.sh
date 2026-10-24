@@ -73,6 +73,12 @@ echo "security group $group"
 say "First-boot script"
 secret() { python -c "import secrets; print(secrets.token_urlsafe(36))"; }
 user_data=$(mktemp)
+# Git Bash hands out /tmp/... paths that the native Windows aws.exe cannot open,
+# so give the CLI a path its own runtime understands. A no-op everywhere else.
+user_data_win="$user_data"
+if command -v cygpath >/dev/null 2>&1; then
+  user_data_win=$(cygpath -m "$user_data")
+fi
 sed -e "s|__REPO_URL__|$REPO_URL|" \
     -e "s|__API_DOMAIN__|$API_DOMAIN|" \
     -e "s|__APP_DOMAIN__|$APP_DOMAIN|" \
@@ -103,7 +109,7 @@ instance=$(aws ec2 run-instances --region "$REGION" --image-id "$ami" \
   --instance-type "$INSTANCE_TYPE" --key-name "$NAME" --security-group-ids "$group" \
   --block-device-mappings 'DeviceName=/dev/sda1,Ebs={VolumeSize=30,VolumeType=gp3}' \
   --metadata-options 'HttpTokens=required' \
-  --user-data "file://$user_data" \
+  --user-data "file://$user_data_win" \
   --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$NAME}]" \
   --query 'Instances[0].InstanceId' --output text)
 rm -f "$user_data"
