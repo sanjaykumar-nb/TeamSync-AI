@@ -1,0 +1,5 @@
+# Next.js serves everything in this directory at the site root.
+# It is empty today, but the production image's runner stage does
+#   COPY --from=build /app/public ./public
+# and git does not track empty directories, so without this file the
+# clone has no public/ and the image build fails on that line.
