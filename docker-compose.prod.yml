@@ -89,6 +89,10 @@ services:
     environment:
       - DOMAIN=${DOMAIN:?set DOMAIN}
       - API_DOMAIN=${API_DOMAIN:?set API_DOMAIN}
+      # Let's Encrypt rejects an address with no dot in it, so without this
+      # the Caddyfile falls back to admin@localhost and no certificate is ever
+      # issued. The failure is quiet: the site simply refuses TLS.
+      - ACME_EMAIL=${ACME_EMAIL:?set ACME_EMAIL}
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
