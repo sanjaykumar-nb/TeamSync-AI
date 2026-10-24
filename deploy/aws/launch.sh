@@ -82,9 +82,23 @@ sed -e "s|__REPO_URL__|$REPO_URL|" \
     "$here/cloud-init.sh" > "$user_data"
 
 say "Launching $INSTANCE_TYPE (Ubuntu 24.04)"
-ami=$(aws ssm get-parameter --region "$REGION" \
-  --name /aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id \
-  --query Parameter.Value --output text)
+# Canonical publishes the image id as a public SSM parameter in most regions,
+# but not all of them - ap-south-1 answers ParameterNotFound. Fall back to
+# asking Canonical's own account (099720109477) for its newest 24.04 image.
+ssm_path=/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id
+ami=$(aws ssm get-parameter --region "$REGION" --name "$ssm_path" \
+  --query Parameter.Value --output text 2>/dev/null || true)
+if [ -z "$ami" ] || [ "$ami" = "None" ]; then
+  canonical_name="ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"
+  ami=$(aws ec2 describe-images --region "$REGION" --owners 099720109477 \
+    --filters "Name=name,Values=$canonical_name" "Name=state,Values=available" \
+    --query 'reverse(sort_by(Images,&CreationDate))[0].ImageId' --output text)
+fi
+if [ -z "$ami" ] || [ "$ami" = "None" ]; then
+  echo "no Ubuntu 24.04 image found in $REGION" >&2
+  exit 1
+fi
+echo "image $ami"
 instance=$(aws ec2 run-instances --region "$REGION" --image-id "$ami" \
   --instance-type "$INSTANCE_TYPE" --key-name "$NAME" --security-group-ids "$group" \
   --block-device-mappings 'DeviceName=/dev/sda1,Ebs={VolumeSize=30,VolumeType=gp3}' \
