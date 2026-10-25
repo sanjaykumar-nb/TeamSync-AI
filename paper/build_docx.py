@@ -43,8 +43,7 @@ COL_WIDTH = 3.45
 
 # column widths, in inches, per table in document order
 TABLE_WIDTHS = [
-    [1.06, 1.02, 0.94, 0.43],                                         # I (claims)
-    [0.85, 1.90, 0.70],                                               # II
+    [0.85, 1.90, 0.70],                                               # I
     [0.80, 1.25, 0.75, 0.65],                                         # III
     [0.64, 1.22, 0.60, 0.48, 0.44, 0.50, 0.42, 1.56, 1.10],           # IV (wide)
     [1.36, 0.42, 0.42, 0.42, 0.42, 0.42],                             # V
@@ -114,8 +113,10 @@ def keep_table_whole(table) -> None:
                     par.paragraph_format.keep_with_next = True
 
 
-BODY_LEAD = Pt(11.4)     # exact leading for 10pt Times
-SMALL_LEAD = Pt(9.0)     # exact leading for 8pt Times
+BODY_LEAD = Pt(10.5)     # exact leading for 10pt Times
+SMALL_LEAD = Pt(8.6)
+REF_PT = Pt(7.1)       # the stylesheet sets 7.1pt for references
+REF_LEAD = Pt(7.5)     # exact leading for 8pt Times
 
 
 def tight(par, before=0, after=0, lead=BODY_LEAD) -> None:
@@ -279,13 +280,13 @@ def emit_references(doc, ol) -> None:
     for i, li in enumerate(ol.find_all("li", recursive=False), 1):
         par = doc.add_paragraph()
         par.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        tight(par, after=1.5, lead=SMALL_LEAD)
-        par.paragraph_format.left_indent = Inches(0.21)
-        par.paragraph_format.first_line_indent = Inches(-0.21)
-        run = par.add_run(f"[{i}] ")
+        tight(par, after=1.2, lead=REF_LEAD)
+        par.paragraph_format.left_indent = Inches(0.19)
+        par.paragraph_format.first_line_indent = Inches(-0.19)
+        run = par.add_run(f"[{i}] ")
         run.font.name = SERIF
-        run.font.size = SMALL_PT
-        add_runs(par, li, size=SMALL_PT)
+        run.font.size = REF_PT
+        add_runs(par, li, size=REF_PT)
 
 
 # ----------------------------------------------------------------- document
@@ -298,7 +299,7 @@ def main() -> None:
     normal.font.size = BODY_PT
     normal.element.rPr.rFonts.set(qn("w:eastAsia"), SERIF)
     normal.paragraph_format.space_after = Pt(0)
-    normal.paragraph_format.line_spacing = Pt(11.4)
+    normal.paragraph_format.line_spacing = Pt(10.5)
 
     first = doc.sections[0]
     first.page_width, first.page_height = Inches(8.5), Inches(11)
@@ -372,7 +373,7 @@ def main() -> None:
         elif el.name == "ul":
             emit_list(doc, el)
         elif el.name == "figure":
-            emit_figure(doc, el, TEXT_WIDTH - 0.16 if wide else COL_WIDTH)
+            emit_figure(doc, el, TEXT_WIDTH * 0.76 if wide else COL_WIDTH)
         elif el.name == "div" and "tablewrap" in (el.get("class") or []):
             emit_table(doc, el, TABLE_WIDTHS[table_i])
             table_i += 1

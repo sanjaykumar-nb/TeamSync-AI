@@ -27,6 +27,11 @@ PDF = HERE / "_fit.pdf"
 
 # legal positions for each figure: anchors it may be inserted *before*
 SLOTS = {
+    "fig1_architecture": [
+        "<h2>V.&ensp;Graph-Grounded Prompting</h2>",
+        "<h3>B. Risk as a graph property</h3>",
+        "AFTER_IV_PARA2",
+    ],
     "fig2_token": [
         "<h3>D. Mid-sprint early warning on unseen projects</h3>",
         "<h3>E. Sprint-end evaluation, and a learned comparator</h3>",
@@ -53,7 +58,12 @@ def place(base: str, choice: dict[str, str]) -> str:
         s = s.replace(b, "")
     for marker, anchor in choice.items():
         blk = blocks[marker].strip()
-        if anchor == "AFTER_TABLE_III":
+        if anchor == "AFTER_IV_PARA2":
+            cue = "code path the product uses.</p>"
+            assert cue in s, cue
+            s = s.replace(cue, cue + "\n\n" + blk + "\n", 1)
+
+        elif anchor == "AFTER_TABLE_III":
             tbl = re.search(r'<div class="tablewrap wide">.*?</div>\r?\n', s, re.S).group(0)
             s = s.replace(tbl, tbl + "\n" + blk + "\n", 1)
         else:
