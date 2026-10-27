@@ -69,7 +69,7 @@ class TestAnalysisPersistence:
         self, client: AsyncClient, auth_headers, test_project, test_task
     ):
         with patch(
-            "app.api.v1.analytics.ai_client.analyze_project", new_callable=AsyncMock
+            "app.services.analysis_runner.ai_client.analyze_project", new_callable=AsyncMock
         ) as mock_analyze:
             mock_analyze.return_value = _FAKE_AI_RESULT
 
@@ -96,7 +96,7 @@ class TestAnalysisPersistence:
         self, client: AsyncClient, auth_headers, test_project, test_task
     ):
         with patch(
-            "app.api.v1.analytics.ai_client.analyze_project", new_callable=AsyncMock
+            "app.services.analysis_runner.ai_client.analyze_project", new_callable=AsyncMock
         ) as mock_analyze:
             mock_analyze.return_value = _FAKE_AI_RESULT
             create_response = await client.post(
@@ -120,7 +120,7 @@ class TestAnalysisPersistence:
         self, client: AsyncClient, auth_headers, test_project, test_task
     ):
         with patch(
-            "app.api.v1.analytics.ai_client.analyze_project", new_callable=AsyncMock
+            "app.services.analysis_runner.ai_client.analyze_project", new_callable=AsyncMock
         ) as mock_analyze:
             mock_analyze.return_value = _FAKE_AI_RESULT
             await client.post(
@@ -136,7 +136,7 @@ class TestAnalysisPersistence:
         self, client: AsyncClient, auth_headers, test_project
     ):
         with patch(
-            "app.api.v1.analytics.ai_client.analyze_project", new_callable=AsyncMock
+            "app.services.analysis_runner.ai_client.analyze_project", new_callable=AsyncMock
         ) as mock_analyze:
             mock_analyze.side_effect = AIServiceError("AI service unreachable")
 

@@ -1,3 +1,4 @@
+import logging
 """Reading a project's GitHub repository: sync, and what it linked.
 
 The sync itself is app.services.github_sync; this exposes it, checks the caller may
@@ -20,6 +21,7 @@ from app.schemas.github import (
     GithubWebhookReceipt,
     GithubWebhookSecret,
 )
+from app.services.analysis_runner import run_analysis
 from app.services.github_sync import (
     GitHubUnavailable,
     apply_event,
@@ -29,6 +31,7 @@ from app.services.github_sync import (
 )
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 async def _project(db: AsyncSession, project_id: UUID, org_id: UUID) -> Project:
@@ -137,7 +140,40 @@ async def receive_webhook(project_id: UUID, request: Request, db: AsyncSession =
     if result is None:
         return GithubWebhookReceipt(event=event, applied=False, detail="Nothing in this event to apply.")
     moved = result["tasks_moved"]
+    if not moved:
+        return GithubWebhookReceipt(
+            event=event, applied=True, links_added=result["links_added"], tasks_moved=moved,
+            detail="Nothing named a task that had moved on.",
+        )
+
+    # Work moved, so the risk picture is out of date. Re-analyse now rather than
+    # waiting for someone to press a button: the deterministic path costs
+    # milliseconds and a bounded prompt, which is the whole point of computing
+    # risk from the graph instead of asking a model to read the board.
+    #
+    # A failed analysis must not fail the webhook. GitHub retries on a 5xx, and
+    # retrying would re-apply the same event; the board change has already been
+    # committed, so the right answer is to report the failure and return 200.
+    run = None
+    try:
+        run = await run_analysis(db, project, trigger_type=f"github_{event}")
+    except Exception as e:  # noqa: BLE001 - deliberately broad; see above
+        logger.warning("re-analysis after %s on project %s failed: %s", event, project.id, e)
+
+    detail = f"{len(moved)} task(s) moved."
+    risk = None
+    if run is None:
+        detail += " Re-analysis could not be started."
+    elif run.status == "completed":
+        risk = (run.coordinator_output or {}).get("overall_risk_level")
+        detail += f" Re-analysed: risk {risk}." if risk else " Re-analysed."
+    else:
+        detail += " Re-analysis failed; the board change still applied."
+
     return GithubWebhookReceipt(
         event=event, applied=True, links_added=result["links_added"], tasks_moved=moved,
-        detail=f"{len(moved)} task(s) moved." if moved else "Nothing named a task that had moved on.",
+        analysis_run_id=str(run.id) if run is not None else None,
+        analysis_status=run.status if run is not None else None,
+        risk_level=risk,
+        detail=detail,
     )

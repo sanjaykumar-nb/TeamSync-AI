@@ -255,11 +255,13 @@ what the author wrote:
   `fix/a1b2c3d4-retry-loop`;
 - or a key like `MESOS-8383` when the task's title starts with one (sprints imported from Jira do).
 
-A commit starts a task, an open pull request sends it to review, a merged one finishes it. Tasks
-never move backwards, nothing is written to GitHub, and every change links the commit or pull
-request behind it. Public repositories need no credentials; `GITHUB_TOKEN` (a read-only token)
+A commit starts a task, an open pull request sends it to review, a merged one finishes it. Tasks never move backwards, nothing is written to GitHub, and every change links the commit or pull request behind it.
+
+Public repositories need no credentials; `GITHUB_TOKEN` (a read-only token)
 raises the rate limit and reaches private ones. People can record their handle in **Profile →
 GitHub username**.
+
+**A push that moves work re-runs the analysis.** Not a scheduled sweep and not a button press: the webhook applies the board change and then analyses the project immediately, because the deterministic path costs milliseconds and a bounded prompt. The receipt GitHub gets back names the run and the new risk level. If the analysis fails the board change still stands and the webhook still answers 200 — GitHub retries a 5xx, and a retry would apply the same event twice.
 
 For **instant updates** instead of pressing Sync, press **Set up a webhook** in the same place. It
 shows the payload URL, the content type and a secret, once — paste them into the repository's

@@ -48,4 +48,8 @@ class GithubWebhookReceipt(BaseModel):
     applied: bool
     links_added: int = 0
     tasks_moved: list[dict] = []
+    # Set when the event moved work and the analysis was therefore re-run.
+    analysis_run_id: str | None = None
+    analysis_status: str | None = None
+    risk_level: str | None = None
     detail: str = ""

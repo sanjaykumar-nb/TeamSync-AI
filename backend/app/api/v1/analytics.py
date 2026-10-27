@@ -11,9 +11,8 @@ from app.models.meeting import Meeting
 from app.models.workload import WorkloadSnapshot, CommunicationEvent
 from app.models.risk import RiskScore, Recommendation, AgentRun
 from app.models.memory import OrganizationMemory, AuditLog, Notification
-from app.services.ai_client import ai_client
 from app.api.deps import require_permission
-from app.services.snapshot_builder import build_project_snapshot
+from app.services.analysis_runner import RISK_SCORE_BY_LEVEL, run_analysis
 from app.core.exceptions import AIServiceError
 from app.schemas.analytics import (
     ProjectHealthResponse,
@@ -29,7 +28,6 @@ from app.schemas.analytics import (
 
 router = APIRouter()
 
-RISK_SCORE_BY_LEVEL = {"low": 0.2, "medium": 0.45, "high": 0.7, "critical": 0.9}
 
 
 @router.get("/projects/{project_id}/dashboard", response_model=ProjectHealthResponse)
@@ -338,31 +336,8 @@ async def trigger_analysis(
             detail="Project not found",
         )
 
-    snapshot = await build_project_snapshot(db, project)
-
-    run = AgentRun(
-        project_id=project_id,
-        triggered_by=user_id,
-        trigger_type="manual",
-        status="running",
-    )
-    db.add(run)
-    await db.commit()
-    await db.refresh(run)
-
-    try:
-        result = await ai_client.analyze_project(
-            project_id=project_id,
-            scope=["planning", "progress", "workload"],
-            trigger_type="manual",
-            snapshot=snapshot,
-        )
-    except AIServiceError as e:
-        run.status = "failed"
-        run.error_message = str(e.detail)
-        await db.commit()
-        await db.refresh(run)
-        return AgentRunResponse.model_validate(run)
+    run = await run_analysis(db, project, trigger_type="manual", triggered_by=user_id)
+    return AgentRunResponse.model_validate(run)
 
     analysis = result.get("result") or {}
     run.status = "completed"

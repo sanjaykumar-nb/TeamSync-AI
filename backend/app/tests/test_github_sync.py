@@ -8,10 +8,14 @@ import hashlib
 import hmac
 import json
 
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from httpx import AsyncClient
 from sqlalchemy import select
 
+from app.core.exceptions import AIServiceError
+from app.models.risk import AgentRun
 from app.models.task import Task, TaskGithubLink
 from app.services.github_sync import normalise_repo, short_ref, sync_project
 
@@ -280,3 +284,86 @@ class TestWebhook:
         headers = await user_with_role("developer")
         response = await client.post(f"/api/v1/projects/{test_project.id}/github/webhook-secret", headers=headers)
         assert response.status_code == 403
+
+class TestWebhookReanalysis:
+    """A push that moves work re-runs the analysis; one that does not, does not."""
+
+    signed = staticmethod(TestWebhook.signed)
+    secret_for = TestWebhook.secret_for
+
+    @staticmethod
+    def _analysis(level: str = "high") -> dict:
+        return {"result": {"overall_risk_level": level, "specialist_outputs": {},
+                           "merged_recommendations": []}}
+
+    async def test_a_push_that_moves_work_re_runs_the_analysis(
+        self, client: AsyncClient, auth_headers, db_session, test_project, test_user
+    ):
+        task = await make_task(db_session, test_project, test_user)
+        secret = await self.secret_for(client, auth_headers, test_project)
+        payload = {"ref": f"refs/heads/fix/{short_ref(task.id)}-retry",
+                   "commits": [{"id": "a" * 40, "message": "tidy the loop", "url": "",
+                                "timestamp": "2026-09-24T10:00:00Z", "author": {"username": "octocat"}}]}
+        body, headers = self.signed(secret, payload, "push")
+
+        with patch("app.services.analysis_runner.ai_client.analyze_project",
+                   new_callable=AsyncMock) as analyse:
+            analyse.return_value = self._analysis("high")
+            response = await client.post(
+                f"/api/v1/projects/{test_project.id}/github/webhook", content=body, headers=headers)
+
+        assert response.status_code == 200
+        received = response.json()
+        assert received["analysis_status"] == "completed"
+        assert received["risk_level"] == "high"
+        assert received["analysis_run_id"]
+        assert analyse.await_count == 1
+        assert analyse.await_args.kwargs["trigger_type"] == "github_push"
+
+        runs = (await db_session.execute(
+            select(AgentRun).where(AgentRun.project_id == test_project.id))).scalars().all()
+        assert [r.trigger_type for r in runs] == ["github_push"]
+        assert runs[0].triggered_by is None  # GitHub has no account here
+
+    async def test_a_push_that_moves_nothing_does_not_analyse(
+        self, client: AsyncClient, auth_headers, db_session, test_project, test_user
+    ):
+        await make_task(db_session, test_project, test_user)
+        secret = await self.secret_for(client, auth_headers, test_project)
+        payload = {"ref": "refs/heads/main",
+                   "commits": [{"id": "b" * 40, "message": "unrelated tidy-up", "url": "",
+                                "timestamp": "2026-09-24T10:00:00Z", "author": {"username": "octocat"}}]}
+        body, headers = self.signed(secret, payload, "push")
+
+        with patch("app.services.analysis_runner.ai_client.analyze_project",
+                   new_callable=AsyncMock) as analyse:
+            response = await client.post(
+                f"/api/v1/projects/{test_project.id}/github/webhook", content=body, headers=headers)
+
+        assert response.status_code == 200
+        assert response.json()["analysis_status"] is None
+        analyse.assert_not_awaited()
+
+    async def test_a_failing_analysis_still_returns_200(
+        self, client: AsyncClient, auth_headers, db_session, test_project, test_user
+    ):
+        """GitHub retries a 5xx, and a retry would re-apply the event. The board
+        change is already committed, so a broken AI service must not fail the call."""
+        task = await make_task(db_session, test_project, test_user)
+        secret = await self.secret_for(client, auth_headers, test_project)
+        payload = {"ref": f"refs/heads/fix/{short_ref(task.id)}-retry",
+                   "commits": [{"id": "c" * 40, "message": "tidy the loop", "url": "",
+                                "timestamp": "2026-09-24T10:00:00Z", "author": {"username": "octocat"}}]}
+        body, headers = self.signed(secret, payload, "push")
+
+        with patch("app.services.analysis_runner.ai_client.analyze_project",
+                   new_callable=AsyncMock) as analyse:
+            analyse.side_effect = AIServiceError(detail="ai service is down")
+            response = await client.post(
+                f"/api/v1/projects/{test_project.id}/github/webhook", content=body, headers=headers)
+
+        assert response.status_code == 200
+        assert response.json()["analysis_status"] == "failed"
+        assert "still applied" in response.json()["detail"]
+        await db_session.refresh(task)
+        assert task.status == "in_progress"  # the board change survived
