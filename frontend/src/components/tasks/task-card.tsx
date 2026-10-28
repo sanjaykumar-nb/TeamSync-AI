@@ -5,10 +5,10 @@ import { Badge } from "@/components/ui/badge"
 import type { Task } from "@/types"
 
 const PRIORITY_STYLES: Record<string, string> = {
-  low: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
-  medium: "bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-400",
-  high: "bg-orange-100 text-orange-800 dark:bg-orange-950/50 dark:text-orange-400",
-  critical: "bg-red-100 text-red-800 dark:bg-red-950/50 dark:text-red-400",
+  low: "bg-muted text-muted-foreground",
+  medium: "bg-info-subtle text-info-strong",
+  high: "bg-caution-subtle text-caution-strong",
+  critical: "bg-danger-subtle text-danger-strong",
 }
 
 function initials(name: string) {

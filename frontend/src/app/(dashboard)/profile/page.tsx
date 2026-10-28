@@ -100,7 +100,7 @@ export default function ProfilePage() {
               const allowed = hasPermission(me.permissions, ability.permission)
               return (
                 <li key={ability.permission} className={`flex items-center gap-2 ${allowed ? "" : "text-muted-foreground"}`}>
-                  {allowed ? <Check className="h-4 w-4 text-green-600" /> : <X className="h-4 w-4" />}
+                  {allowed ? <Check className="h-4 w-4 text-success" /> : <X className="h-4 w-4" />}
                   {ability.label}
                 </li>
               )

@@ -30,13 +30,27 @@ interface ProjectHealth {
 }
 
 const statusColors: Record<string, string> = {
-  backlog: "bg-gray-100 text-gray-800",
-  planned: "bg-blue-100 text-blue-800",
-  in_progress: "bg-yellow-100 text-yellow-800",
-  blocked: "bg-red-100 text-red-800",
-  review: "bg-purple-100 text-purple-800",
-  done: "bg-green-100 text-green-800",
+  backlog: "bg-muted text-muted-foreground",
+  planned: "bg-secondary text-secondary-foreground",
+  in_progress: "bg-info-subtle text-info-strong",
+  blocked: "bg-danger-subtle text-danger-strong",
+  review: "bg-warning-subtle text-warning-strong",
+  done: "bg-success-subtle text-success-strong",
 }
+
+/** Colour a 0-1 score by what it means, not by what it is called.
+ *  `higher_is_better` for health and completion; the inverse for risk. */
+function severityOf(score: number, higherIsBetter = true): "success" | "warning" | "caution" | "danger" {
+  const bad = higherIsBetter ? 1 - score : score
+  if (bad >= 0.75) return "danger"
+  if (bad >= 0.5) return "caution"
+  if (bad >= 0.25) return "warning"
+  return "success"
+}
+
+const TEXT_FOR = { success: "text-success", warning: "text-warning", caution: "text-caution", danger: "text-danger" } as const
+const STRONG_FOR = { success: "text-success-strong", warning: "text-warning-strong", caution: "text-caution-strong", danger: "text-danger-strong" } as const
+const TINT_FOR = { success: "bg-success-subtle", warning: "bg-warning-subtle", caution: "bg-caution-subtle", danger: "bg-danger-subtle" } as const
 
 export default function ProjectDashboardPage() {
   const params = useParams()
@@ -184,11 +198,11 @@ export default function ProjectDashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <MetricCard title="Health Score" value={`${Math.round(healthScore * 100)}`} icon={TrendingUp} color="text-green-600" subtitle="Project health" />
-        <MetricCard title="Risk Score" value={`${Math.round(riskScore * 100)}`} icon={AlertTriangle} color="text-red-600" subtitle="Overall risk" />
-        <MetricCard title="Completion" value={`${completionPct}%`} icon={Target} color="text-blue-600" subtitle="Task completion" />
-        <MetricCard title="Overdue" value={`${health?.overdue_tasks ?? 0}`} icon={Clock} color="text-yellow-600" subtitle="Overdue tasks" />
-        <MetricCard title="Team" value={`${health?.team_size ?? 0}`} icon={Users} color="text-purple-600" subtitle="Active members" />
+        <MetricCard title="Health Score" value={`${Math.round(healthScore * 100)}`} icon={TrendingUp} color={TEXT_FOR[severityOf(healthScore)]} subtitle="Project health" />
+        <MetricCard title="Risk Score" value={`${Math.round(riskScore * 100)}`} icon={AlertTriangle} color={TEXT_FOR[severityOf(riskScore, false)]} subtitle="Overall risk" />
+        <MetricCard title="Completion" value={`${completionPct}%`} icon={Target} color={TEXT_FOR[severityOf(completionPct / 100)]} subtitle="Task completion" />
+        <MetricCard title="Overdue" value={`${health?.overdue_tasks ?? 0}`} icon={Clock} color="text-warning" subtitle="Overdue tasks" />
+        <MetricCard title="Team" value={`${health?.team_size ?? 0}`} icon={Users} color="text-muted-foreground" subtitle="Active members" />
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
@@ -245,13 +259,13 @@ export default function ProjectDashboardPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-lg">
+                  <div className={`p-4 rounded-lg border ${TINT_FOR[severityOf(healthScore)]}`} data-metric>
                     <p className="text-sm text-muted-foreground">Health Score</p>
-                    <p className="text-3xl font-bold text-green-600">{Math.round(healthScore * 100)}</p>
+                    <p className={`text-3xl font-semibold ${STRONG_FOR[severityOf(healthScore)]}`}>{Math.round(healthScore * 100)}</p>
                   </div>
-                  <div className="p-4 bg-red-50 dark:bg-red-950/30 rounded-lg">
+                  <div className={`p-4 rounded-lg border ${TINT_FOR[severityOf(riskScore, false)]}`} data-metric>
                     <p className="text-sm text-muted-foreground">Risk Score</p>
-                    <p className="text-3xl font-bold text-red-600">{Math.round(riskScore * 100)}</p>
+                    <p className={`text-3xl font-semibold ${STRONG_FOR[severityOf(riskScore, false)]}`}>{Math.round(riskScore * 100)}</p>
                   </div>
                 </div>
                 {health && (
@@ -432,7 +446,7 @@ function TimelineItem({
     <div className="flex items-start gap-3">
       <div
         className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-          isCurrent ? "bg-primary text-primary-foreground" : isCompleted ? "bg-green-500 text-white" : "bg-muted text-muted-foreground"
+          isCurrent ? "bg-primary text-primary-foreground" : isCompleted ? "bg-success text-primary-foreground" : "bg-muted text-muted-foreground"
         }`}
       >
         <Icon className="h-4 w-4" />

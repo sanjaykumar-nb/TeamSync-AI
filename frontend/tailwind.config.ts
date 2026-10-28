@@ -50,6 +50,33 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Severity, named by what it means rather than what colour it is, so a
+        // risk level looks the same in a badge, a chart and a table row.
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          subtle: "hsl(var(--success-subtle))",
+          strong: "hsl(var(--success-strong))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          subtle: "hsl(var(--warning-subtle))",
+          strong: "hsl(var(--warning-strong))",
+        },
+        caution: {
+          DEFAULT: "hsl(var(--caution))",
+          subtle: "hsl(var(--caution-subtle))",
+          strong: "hsl(var(--caution-strong))",
+        },
+        danger: {
+          DEFAULT: "hsl(var(--danger))",
+          subtle: "hsl(var(--danger-subtle))",
+          strong: "hsl(var(--danger-strong))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          subtle: "hsl(var(--info-subtle))",
+          strong: "hsl(var(--info-strong))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

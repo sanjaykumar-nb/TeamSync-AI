@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button"
 import type { AgentRecommendation, AgentRun, GraphFinding, RecommendedAction, RiskLevel } from "@/types"
 
 const RISK_STYLES: Record<RiskLevel, { badge: string; icon: string }> = {
-  low: { badge: "bg-green-100 text-green-800 dark:bg-green-950/50 dark:text-green-400", icon: "text-green-600" },
-  medium: { badge: "bg-yellow-100 text-yellow-800 dark:bg-yellow-950/50 dark:text-yellow-400", icon: "text-yellow-600" },
-  high: { badge: "bg-orange-100 text-orange-800 dark:bg-orange-950/50 dark:text-orange-400", icon: "text-orange-600" },
-  critical: { badge: "bg-red-100 text-red-800 dark:bg-red-950/50 dark:text-red-400", icon: "text-red-600" },
+  low: { badge: "bg-success-subtle text-success-strong border border-success/20", icon: "text-success" },
+  medium: { badge: "bg-warning-subtle text-warning-strong border border-warning/25", icon: "text-warning" },
+  high: { badge: "bg-caution-subtle text-caution-strong border border-caution/25", icon: "text-caution" },
+  critical: { badge: "bg-danger-subtle text-danger-strong border border-danger/20", icon: "text-danger" },
 }
 
 export function RiskBadge({ level }: { level: RiskLevel }) {
@@ -140,7 +140,7 @@ function RecommendationActions({
                     </Button>
                   )
                 ) : (
-                  <span className={`text-xs ${state === "applied" ? "text-green-700 dark:text-green-400" : "text-muted-foreground"}`}>
+                  <span className={`text-xs ${state === "applied" ? "text-success-strong" : "text-muted-foreground"}`}>
                     {ACTION_STATE_LABELS[state]}
                   </span>
                 )}
@@ -357,7 +357,7 @@ export function AgentRunPanel({
         <CardContent>
           {recommendations.length === 0 ? (
             <div className="flex items-center gap-2 text-muted-foreground py-4">
-              <CheckCircle2 className="h-5 w-5 text-green-600" />
+              <CheckCircle2 className="h-5 w-5 text-success" />
               No significant risks found — nothing to recommend.
             </div>
           ) : (

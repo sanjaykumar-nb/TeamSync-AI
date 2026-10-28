@@ -52,9 +52,9 @@ export default function WorkspacePage() {
   const atRiskCount = projects.filter((p) => (p.risk_score ?? 0) >= 0.4).length
 
   const stats = [
-    { label: "Total Projects", value: String(projects.length), icon: FolderKanban, color: "bg-blue-500" },
-    { label: "Active", value: String(activeCount), icon: LayoutDashboard, color: "bg-green-500" },
-    { label: "At Risk", value: String(atRiskCount), icon: AlertTriangle, color: "bg-yellow-500" },
+    { label: "Total Projects", value: String(projects.length), icon: FolderKanban, color: "bg-muted text-foreground" },
+    { label: "Active", value: String(activeCount), icon: LayoutDashboard, color: "bg-info-subtle text-info-strong" },
+    { label: "At Risk", value: String(atRiskCount), icon: AlertTriangle, color: "bg-caution-subtle text-caution-strong" },
   ]
 
   return (
@@ -131,9 +131,9 @@ function scoreColor(score: number | null, invert = false): string {
   const v = score ?? 0
   const good = invert ? v < 0.3 : v > 0.7
   const bad = invert ? v >= 0.5 : v <= 0.4
-  if (good) return "text-green-600"
-  if (bad) return "text-red-600"
-  return "text-yellow-600"
+  if (good) return "text-success-strong"
+  if (bad) return "text-danger-strong"
+  return "text-warning-strong"
 }
 
 function ProjectCard({ project }: { project: Project }) {
